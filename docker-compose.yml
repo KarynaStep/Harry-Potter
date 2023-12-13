@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  front-react:
+    restart: always
+    container_name: squadhelp_front-react
+    build:
+      context: ./client
+    # environment:
+    #   NODE_ENV: development
+    depends_on:
+      - server-dev
+    volumes:
+      - ./client:/client
+    ports:
+      - "5000:3000"
+
+  server-dev:
+    restart: always
+    container_name: squadhelp_server
+    build:
+      context: ./server
+    # environment:
+    #   NODE_ENV: development
+    ports:
+      - "3000:3000"
+    depends_on:
+      db-postgres-hp: 
+        condition: service_completed_successfully
+    volumes:
+      - ./server:/server
+
+
+  db: 
+    image: postgres:13.2-alpine
+    restart: always
+    container_name: db-postgres-hp
+    volumes:
+    - ./.database/postgres/data:/var/lib/postgres/data
+    entrypoint: 
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=hp
+    ports:
+      - 5432:5432  
