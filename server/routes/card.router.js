@@ -1,21 +1,17 @@
 const { Router } = require('express');
-// const UserController = require('../controllers/user.controller');
-// const { checkUser } = require('../middlewares/users.mw');
-const paginate = require('../middlewares/paginate.mw');
+const CardController = require('../controllers/card.controller');
 const { singleUpload } = require('../middlewares/upload.mw');
+const { checkCard } = require('../middlewares/cards.mw');
 
 const cardRouter = Router();
 
-// userRouter
-//   .route('/')
-//   .post(singleUpload('avatar'), UserController.createUser)
-//   .get(paginate, UserController.getAllUsers);
+cardRouter.route('/').post(singleUpload('picture'), CardController.createCard).get(CardController.getAllCards);
 
-// userRouter
-//   .route('/:idUser')
-//   // .all(checkUser)
-//   .get(UserController.getUser)
-//   .patch(singleUpload('avatar'), UserController.updateUserInstance)
-//   .delete(UserController.deleteUserInstance);
+cardRouter
+  .route('/:idCard')
+  .all(checkCard)
+  .get(CardController.getCard)
+  .patch(singleUpload('picture'), CardController.updateCard)
+  .delete(CardController.deleteCard);
 
 module.exports = cardRouter;

@@ -1,14 +1,12 @@
 const { Router } = require('express');
-const userRouter = require('./card.router');
-const taskRouter = require('./task.router');
-const groupRouter = require('./group.router');
-const { checkUser } = require('../middlewares/users.mw');
+const cardRouter = require('./card.router');
+const roomRouter = require('./room.router');
+const userRouter = require('./user.router');
 
 const router = Router();
 
+router.use('/cards', cardRouter);
+router.use('/rooms', roomRouter);
 router.use('/users', userRouter);
-router.use('/users/:idUser/tasks', checkUser, taskRouter);
-
-router.use('/groups', groupRouter);
 
 module.exports = router;

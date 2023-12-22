@@ -1,39 +1,34 @@
 'use strict';
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Room extends Model {
+  class User extends Model {
     static associate(models) {
-      Room.hasMany(models.User, {
+      User.belongsTo(models.Card, {
+        foreignKey: 'idCard',
+      });
+      User.belongsTo(models.Room, {
         foreignKey: 'nameRoom',
       });
     }
   }
-  Room.init(
+  User.init(
     {
-      name: {
+      nameUser: {
+        field: 'name_user',
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         validate: {
           notNull: true,
           notEmpty: true,
         },
       },
-      standardDeck: {
-        field: 'standard_deck',
-        type: DataTypes.BOOLEAN,
-      },
-      proDeck: {
-        field: 'pro_deck',
-        type: DataTypes.BOOLEAN,
-      },
     },
     {
       sequelize,
-      modelName: 'Room',
-      tableName: 'rooms',
+      modelName: 'User',
+      tableName: 'users',
       underscored: true,
     }
   );
-  return Room;
+  return User;
 };

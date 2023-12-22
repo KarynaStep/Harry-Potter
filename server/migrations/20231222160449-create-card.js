@@ -15,10 +15,13 @@ module.exports = {
       },
       picture: {
         type: Sequelize.TEXT,
-        allowNull: false,
       },
       description: {
         type: Sequelize.TEXT,
+      },
+      isProDeck: {
+        field: 'is_pro_deck',
+        type: Sequelize.BOOLEAN,
       },
       createdAt: {
         field: 'created_at',
