@@ -1,0 +1,60 @@
+@use '/src/common/styles/templates' as *;
+@use '/src/common/styles/colors' as *;
+@use '/src/common/styles/breackpoints' as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  width: 100vw;
+  background-image: url('../../../public/images/1.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: $colorWhite;
+  // @media screen and (min-width: $md) {
+  //   height: 110vh;
+  // }
+  h2{
+    font-size: 1.4em;
+    margin: 5px;
+  }
+  .container_for_cards {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    @media screen and (max-width: $sm) {
+      flex-direction: column;
+      align-items: center;
+    }
+    .card {
+      text-align: center;
+      width: 25%;
+      h3{
+        font-size: 1em;
+        margin: 10px;
+      }
+      img {
+        width: 90%;
+        border: 3px solid $colorDark;
+      }
+        @media screen and (max-width: $sm) {
+        width: 50%;
+      }
+    }
+  }
+  button {
+    @extend %btn;
+    background-color: $colorMain;
+    color: $colorWhite;
+  }
+  button:before {
+    @extend %btn_before;
+  }
+  button:hover {
+    background: $colorDark;
+    color: $colorWhite;
+  }
+  button:hover:before {
+    @extend %btn_hover_before;
+  }
+}

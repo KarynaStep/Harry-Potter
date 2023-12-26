@@ -1,0 +1,55 @@
+@use '/src/common/styles/templates' as *;
+@use '/src/common/styles/mixin' as *;
+@use '/src/common/styles/colors' as *;
+@use '/src/common/styles/breackpoints' as *;
+
+.container {
+  @include flexCenter;
+  width: 70%;
+  height: 50%;
+  border-radius: 20px;
+  position: absolute;
+  z-index: 999;
+  background-color: #f8e2a6;
+  color: $colorDark;
+  text-align: center;
+  .title{
+    font-weight: 900;
+  }
+  label {
+    display: block;
+    margin: 10px;
+    
+    span {
+      @media screen and (max-width: $sm) {
+        display: block;
+      }
+    }
+  }
+  button {
+    text-decoration: none;
+    border-style: none;
+    background-color: #80716d00;
+    color: $colorDark;
+  }
+  .btn_close {
+    position: absolute;
+    right: 5%;
+    top: 7%;
+  }
+  .btn_send {
+    @extend %btn;
+    background-color: $colorMain;
+    color: $colorWhite;
+  }
+  .btn_send:before {
+    @extend %btn_before;
+  }
+  .btn_send:hover {
+    background: $colorDark;
+    color: $colorWhite;
+  }
+  .btn_send:hover:before {
+    @extend %btn_hover_before;
+  }
+}

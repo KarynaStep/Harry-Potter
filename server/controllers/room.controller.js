@@ -80,11 +80,3 @@ module.exports.getRoomForName = async (req, res, next) => {
     next(error);
   }
 };
-
-// const [room, created] = await Room.findOrCreate({
-//   where: { name: values.nameRoom },
-//   defaults: {
-//     standardDeck: true,
-//     proDeck: false,
-//   },
-// });

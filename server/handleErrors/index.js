@@ -1,7 +1,6 @@
 const { ValidationError, UniqueConstraintError } = require('sequelize');
 
 module.exports = (err, req, res, next) => {
-  //console.log(err);
   if (err instanceof UniqueConstraintError) {
     return res.status(409).send({ errors: [err.errors[0].message] });
   }

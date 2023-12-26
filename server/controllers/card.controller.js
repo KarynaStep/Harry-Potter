@@ -31,9 +31,13 @@ module.exports.getCard = async (req, res, next) => {
   }
 };
 
-module.exports.getAllCards = async (req, res, next) => {
+module.exports.getCardsNotPro = async (req, res, next) => {
   try {
-    const cards = await Card.findAll();
+    const cards = await Card.findAll({
+      where: {
+        isProDeck: false
+      },
+    });
     if (cards.length === 0) {
       return res.status(204).send({ data: 'Card list is empty' });
     }
@@ -62,9 +66,21 @@ module.exports.updateCard = async (req, res, next) => {
 
 module.exports.deleteCard = async (req, res, next) => {
   try {
-    const { body, cardInstance } = req;
+    const {cardInstance } = req;
     const result = await cardInstance.destroy();
     return res.status(200).send({ data: cardInstance });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports.getCardPro = async (req, res, next) => {
+  try {
+    const cards = await Card.findAll();
+    if (cards.length === 0) {
+      return res.status(204).send({ data: 'Card list is empty' });
+    }
+    res.status(200).send({ data: cards });
   } catch (error) {
     next(error);
   }

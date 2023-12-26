@@ -1,0 +1,39 @@
+@use '/src/common/styles/templates' as *;
+@use '/src/common/styles/mixin' as *;
+@use '/src/common/styles/colors' as *;
+
+
+.container {
+  @include flexCenter;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('../../../public/images/background-home.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: $colorWhite;
+  text-align: center;
+  h1{
+    padding: 10 10px;
+    font-weight: 900;
+    font-size: 1.4em;
+  }
+  h2{
+    font-weight: 500;
+    font-size: 1em;
+    text-transform: uppercase;
+  }
+  .btn_entry {
+    @extend %btn;
+    color: $colorMain;
+  }
+  .btn_entry:before {
+    @extend %btn_before;
+  }
+  .btn_entry:hover {
+    @extend %btn_hover;
+  }
+  .btn_entry:hover:before {
+    @extend %btn_hover_before;
+  }
+}

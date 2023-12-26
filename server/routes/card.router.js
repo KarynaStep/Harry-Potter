@@ -5,7 +5,12 @@ const { checkCard } = require('../middlewares/cards.mw');
 
 const cardRouter = Router();
 
-cardRouter.route('/').post(singleUpload('picture'), CardController.createCard).get(CardController.getAllCards);
+cardRouter
+  .route('/')
+  .post(singleUpload('picture'), CardController.createCard)
+  .get(CardController.getCardsNotPro);
+
+cardRouter.route('/pro').get(CardController.getCardPro);
 
 cardRouter
   .route('/:idCard')
