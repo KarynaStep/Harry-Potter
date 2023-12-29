@@ -4,6 +4,8 @@
   "description": "",
   "private": true,
   "scripts": {
+    "db-migrate": "npx sequelize db:migrate",
+    "start": "nodemon ./server.js",
     "start-dev": "nodemon ./server.js"
   },
   "keywords": [],

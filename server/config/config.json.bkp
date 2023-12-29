@@ -3,7 +3,7 @@
     "username": "postgres",
     "password": "postgres",
     "database": "hp",
-    "host": "localhost",
+    "host": "db-postgres-hp",
     "dialect": "postgres",
     "migrationStorage": "json",
     "seederStorage": "json"

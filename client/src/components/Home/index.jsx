@@ -22,9 +22,11 @@ const Home = () => {
   }, []);
 
   const writeConstantCard = () => {
-    cards.forEach((card) => CONSTANTS.CARDS.push(card.id));
-    cardsPro.forEach((cardPro) => CONSTANTS.CARDS_PRO.push(cardPro.id));
-    return
+    if (cards || cardsPro ) {
+      cards.forEach((card) => CONSTANTS.CARDS.push(card.id));
+      cardsPro.forEach((cardPro) => CONSTANTS.CARDS_PRO.push(cardPro.id));
+      return
+    }
   };
   
   return (
