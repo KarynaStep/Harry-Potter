@@ -12,9 +12,9 @@ const Home = () => {
   const { cards, cardsPro } = useSelector((store) => store.cards);
 
   const handelClick = () => {
-    setWindow(!window)
-    writeConstantCard()
-    return
+    setWindow(!window);
+    writeConstantCard();
+    return;
   };
   useEffect(() => {
     dispatch(getCards()); // eslint-disable-next-line
@@ -22,11 +22,15 @@ const Home = () => {
   }, []);
 
   const writeConstantCard = () => {
-    cards.forEach((card) => CONSTANTS.CARDS.push(card.id));
-    cardsPro.forEach((cardPro) => CONSTANTS.CARDS_PRO.push(cardPro.id));
-    return
+    console.log(cards);
+    console.log(cardsPro);
+    if (cards || cardsPro) {
+      cards.forEach((card) => CONSTANTS.CARDS.push(card.id));
+      cardsPro.forEach((cardPro) => CONSTANTS.CARDS_PRO.push(cardPro.id));
+      return;
+    }
   };
-  
+
   return (
     <section className={styles.container}>
       {!window && (

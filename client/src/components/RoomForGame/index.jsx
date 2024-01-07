@@ -1,8 +1,10 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { sendUsersByRoom } from '../../store/usersSlice';
+import { sendUsersByRoom, updateOneUser } from '../../store/usersSlice';
 import styles from './RoomForGame.module.scss';
+import { getRandomInt } from '../../utils/randomNumbers';
+import CONSTANTS from '../../constants';
 
 const RoomForGame = () => {
   const { users, error, isFetching, userAuth } = useSelector(
@@ -23,24 +25,44 @@ const RoomForGame = () => {
   }, [dispatch, userAuth]);
 
   const handelClickExit = () => navigate('/');
- 
+
+  const handelClick = (id) => {
+    let idCard = getRandomInt(1, CONSTANTS.MAX_VALUE);
+
+    const idCardInRoom = [];
+    users.forEach((user) => {
+      idCardInRoom.push(user.idCard);
+    });
+    while (idCardInRoom.includes(idCard)) {
+      idCard = getRandomInt(1, CONSTANTS.MAX_VALUE);
+    }
+    console.log(idCardInRoom);
+    dispatch(updateOneUser([id, { idCard: idCard }]));
+  };
 
   const mapUsers = (user) => {
+    
     if (user.nameUser === nameUserInLS) {
       return;
     }
     return (
       <div className={styles.card} key={user.id}>
         <h3>{user.nameUser}</h3>
-        <img
-          src={`./images/heroes/${user.Card['picture']}`}
-          alt={user.Card['name']}
-        />
+        {user.Card['picture'] && (
+          <img
+            src={`./images/heroes/${user.Card['picture']}`}
+            alt={user.Card['name']}
+          />
+        )}
         <h3>{user.Card['name']}</h3>
         <p>{user.Card['description']}</p>
+        <button onClick={() => handelClick(user.id)}>Змінити персонажа</button>
       </div>
     );
   };
+
+  console.log(users);
+  
 
   return (
     <section className={styles.container}>
