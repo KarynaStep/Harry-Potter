@@ -1,7 +1,8 @@
 const CONSTANTS = {
   PORT: 3000,
   MIN_VALUE: 1,
-  MAX_VALUE: 20,
+  MAX_VALUE_CARDS: 34,
+  MAX_VALUE_CARDS_PRO: 57,
   CARDS: [],
   CARDS_PRO: [],
 };

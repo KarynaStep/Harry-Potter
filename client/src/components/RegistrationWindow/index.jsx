@@ -32,7 +32,6 @@ const RegistrationWindow = (props) => {
   const submit = (values, formikBag) => {
     let maxValueForRandom = CONSTANTS.CARDS.length;
     let idCard = CONSTANTS.CARDS[getRandomInt(1, maxValueForRandom)];
-   
 
     if (rooms) {
       const room = rooms.find((room) => room.name === values.nameRoom);
@@ -43,11 +42,11 @@ const RegistrationWindow = (props) => {
         const usersInRoom = users.filter(
           (user) => user.nameRoom === values.nameRoom
         );
-        const idCardInRoom = [];
+        const idCardsInRoom = [];
         usersInRoom.forEach((user) => {
-          idCardInRoom.push(user.idCard);
+          idCardsInRoom.push(user.idCard);
         });
-        while (idCardInRoom.includes(idCard)) {
+        while (idCardsInRoom.includes(idCard)) {
           idCard = CONSTANTS.CARDS_PRO[getRandomInt(0, maxValueForRandom)];
         }
       } else {
@@ -63,7 +62,11 @@ const RegistrationWindow = (props) => {
         }
       }
     }
-    
+
+    if (!idCard) {
+      idCard = CONSTANTS.CARDS[getRandomInt(1, maxValueForRandom)];
+    }
+
     const user = {
       nameUser: values.nameUser,
       idCard: idCard,
@@ -76,7 +79,7 @@ const RegistrationWindow = (props) => {
     localStorage.setItem('nameRoom', JSON.stringify(values.nameRoom));
 
     formikBag.resetForm();
-     navigate('/room');
+    navigate('/room');
   };
 
   const handelClick = () => setWindow(!window);

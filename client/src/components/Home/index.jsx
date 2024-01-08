@@ -13,7 +13,6 @@ const Home = () => {
 
   const handelClick = () => {
     setWindow(!window);
-    writeConstantCard();
     return;
   };
   useEffect(() => {
@@ -21,15 +20,12 @@ const Home = () => {
     dispatch(getCardsAllPro()); // eslint-disable-next-line
   }, []);
 
-  const writeConstantCard = () => {
-    console.log(cards);
-    console.log(cardsPro);
-    if (cards || cardsPro) {
-      cards.forEach((card) => CONSTANTS.CARDS.push(card.id));
-      cardsPro.forEach((cardPro) => CONSTANTS.CARDS_PRO.push(cardPro.id));
-      return;
-    }
-  };
+  CONSTANTS.CARDS = cards;
+  CONSTANTS.CARDS_PRO = cardsPro;
+
+  console.log(CONSTANTS.CARDS);
+  console.log(CONSTANTS.CARDS_PRO);
+  
 
   return (
     <section className={styles.container}>
