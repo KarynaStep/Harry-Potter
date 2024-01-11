@@ -3,8 +3,7 @@ const CONSTANTS = {
   MIN_VALUE: 1,
   MAX_VALUE_CARDS: 34,
   MAX_VALUE_CARDS_PRO: 57,
-  CARDS: [],
-  CARDS_PRO: [],
+  MAX_VALUE_FOR_RANDOM: 34,
 };
 
 export default CONSTANTS;

@@ -21,8 +21,8 @@ module.exports.createUser = async (req, res, next) => {
       },
     });
 
-    const user = await card.createUser(values);
-
+    const user = await User.create(values);
+sendUsersByRoom()
     res.status(201).send({ data: user });
   } catch (error) {
     next(error);
@@ -57,9 +57,10 @@ module.exports.sendUsersByRoom = async (req, res, next) => {
 
     const users = await User.findAll({
       where: { nameRoom: values.nameRoom },
-      include: {
-        model: Card,
-      },
+      include:
+        {
+          model: Card,
+        }
     });
     if (users.length === 0) {
       return res.status(204).send({ data: 'User list is empty' });

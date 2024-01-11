@@ -1,31 +1,15 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
 
 import RegistrationWindow from '../RegistrationWindow';
-import { getCardsAllPro, getCards } from '../../store/cardsSlice';
-import CONSTANTS from '../../constants';
 import styles from './Home.module.scss';
 
 const Home = () => {
   const [window, setWindow] = useState(false);
-  const dispatch = useDispatch();
-  const { cards, cardsPro } = useSelector((store) => store.cards);
 
   const handelClick = () => {
     setWindow(!window);
     return;
   };
-  useEffect(() => {
-    dispatch(getCards()); // eslint-disable-next-line
-    dispatch(getCardsAllPro()); // eslint-disable-next-line
-  }, []);
-
-  CONSTANTS.CARDS = cards;
-  CONSTANTS.CARDS_PRO = cardsPro;
-
-  console.log(CONSTANTS.CARDS);
-  console.log(CONSTANTS.CARDS_PRO);
-  
 
   return (
     <section className={styles.container}>

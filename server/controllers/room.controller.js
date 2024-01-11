@@ -7,12 +7,24 @@ module.exports.createRoom = async (req, res, next) => {
   try {
     const { body } = req;
     const values = _.pick(body, attrs);
-    const createdRoom = await Room.create(values);
-    if (!createdRoom) {
+    console.log(values);
+    const [room, ] = await Room.findOrCreate({
+      where: {
+        name: values.name,
+      },
+      defaults: {
+        name: values.name,
+        standardDeck: values.standardDeck,
+        proDeck: values.proDeck,
+      },
+    });
+
+    console.log('room', room);
+    if (!room) {
       return next(createError(400, 'Room not created'));
     }
 
-    res.status(201).send({ data: createdRoom });
+    res.status(201).send({ data: room });
   } catch (error) {
     next(error);
   }
