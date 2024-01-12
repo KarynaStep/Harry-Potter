@@ -19,4 +19,6 @@ cardRouter
   .patch(singleUpload('picture'), CardController.updateCard)
   .delete(CardController.deleteCard);
 
+  
+
 module.exports = cardRouter;

@@ -2,5 +2,5 @@ PATCH  http://localhost:3000/api/rooms HTTP/1.1
 Content-Type: application/json
 
 {
-  "name":"Yay3"
+  "name":"Room"
 }

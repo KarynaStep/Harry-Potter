@@ -1,15 +1,29 @@
 import React, { useState } from 'react';
-
+// import cron from 'node-cron';
+// import { converter } from 'react-js-cron';
+import { useDispatch } from 'react-redux';
 import RegistrationWindow from '../RegistrationWindow';
 import styles from './Home.module.scss';
+import { delRooms } from '../../store/roomsSlice';
+
 
 const Home = () => {
   const [window, setWindow] = useState(false);
+    const dispatch = useDispatch();
 
   const handelClick = () => {
     setWindow(!window);
     return;
   };
+  
+
+  // cron.schedule(
+  //   '45 3 * * *',
+  //   () => {
+  //     dispatch(delRooms());
+  //     dispatch(delRooms());
+  //   }
+  // );
 
   return (
     <section className={styles.container}>

@@ -11,10 +11,11 @@ const RoomForGame = () => {
   const { users, error, isFetching, userAuth } = useSelector(
     (state) => state.users
   );
-  const { errorRoom, isFetchingRoom, foundRoom } = useSelector(
+  const { errorRoom, isFetchingRoom, roomAuth } = useSelector(
     (state) => state.rooms
   );
 
+  console.log('roomAuth', roomAuth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -27,18 +28,21 @@ const RoomForGame = () => {
     .getItem('nameUser')
     .replace(/[^a-zа-яёїієґ0-9]/gi, '');
 
-  const renderUser = () => {
-    dispatch(sendUsersByRoom({ nameRoom: nameRoomInLS }));
-    console.log('renderUser');
-  };
+  
 
   useEffect(() => {
     dispatch(sendUsersByRoom({ nameRoom: nameRoomInLS }));
     dispatch(getRoomByName({ name: nameRoomInLS }));
   }, [dispatch, userAuth]);
   useEffect(() => {
-    const timerId = setInterval(renderUser, 10000);
-    setTimeout(() => clearInterval(timerId), 90000);
+    const renderUser = () => {
+    dispatch(sendUsersByRoom({ nameRoom: nameRoomInLS }));
+    console.log('renderUser');
+  };
+    if (users) {
+      const timerId = setInterval(renderUser, 10000);
+    setTimeout(() => clearInterval(timerId), 30000);
+    }
   }, []);
 
   // const changeIdUser = (users) => {
@@ -69,7 +73,7 @@ const RoomForGame = () => {
 
   const handelClick = (id) => {
     let idCard = getRandomInt(0, maxValueForRandom);
-    if (foundRoom.proDeck) {
+    if (roomAuth.proDeck) {
       maxValueForRandom = CONSTANTS.MAX_VALUE_CARDS_PRO;
     }
     const idCardInRoom = [];

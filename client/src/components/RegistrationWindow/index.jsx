@@ -31,6 +31,7 @@ const RegistrationWindow = (props) => {
       standardDeck: values.standardDeck,
       proDeck: values.proDeck,
     };
+    console.log(roomNew);
     dispatch(addRoom(roomNew));
 
     if (roomNew.proDeck) {
@@ -48,6 +49,7 @@ const RegistrationWindow = (props) => {
       idCard: idCard,
       nameRoom: values.nameRoom,
     };
+    console.log(user);
     dispatch(addUser(user));
 
     localStorage.setItem('nameUser', JSON.stringify(values.nameUser));

@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {createUser, getAllUsers, sendUsersInRoom, updateUser } from '../api';
+import {createUser, deletelUsers, getAllUsers, sendUsersInRoom, updateUser } from '../api';
 import { pendingReducer, rejectReducer, decorateAsyncThunk } from './helpers';
 
 const USERS_SLICE_NAME = 'users';
@@ -24,6 +24,11 @@ export const updateOneUser = decorateAsyncThunk({
 export const getUsers = decorateAsyncThunk({
   type: `${USERS_SLICE_NAME}/getUsers`,
   thunk: getAllUsers,
+});
+
+export const delUsers = decorateAsyncThunk({
+  type: `${USERS_SLICE_NAME}/delUsers`,
+  thunk: deletelUsers,
 });
 
 
@@ -65,6 +70,13 @@ const usersSlice = createSlice({
       state.userAuth = action.payload;
     });
     builder.addCase(updateOneUser.rejected, rejectReducer);
+    builder.addCase(delUsers.pending, pendingReducer);
+    builder.addCase(delUsers.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.error = null;
+      state.userAuth = action.payload;
+    });
+    builder.addCase(delUsers.rejected, rejectReducer);
   },
 });
 

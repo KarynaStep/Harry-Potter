@@ -1,6 +1,7 @@
 const _ = require('lodash');
 const createError = require('http-errors');
 const { Room, User, Card } = require('../models');
+const { Op } = require('sequelize');
 const attrs = ['nameUser', 'idCard', 'nameRoom'];
 
 module.exports.createUser = async (req, res, next) => {
@@ -22,7 +23,6 @@ module.exports.createUser = async (req, res, next) => {
     });
 
     const user = await User.create(values);
-sendUsersByRoom()
     res.status(201).send({ data: user });
   } catch (error) {
     next(error);
@@ -106,9 +106,16 @@ module.exports.updateUser = async (req, res, next) => {
 
 module.exports.deleteUser = async (req, res, next) => {
   try {
-    const { userInstance } = req;
-    const result = await userInstance.destroy();
-    return res.status(200).send({ data: userInstance });
+    const date = new Date();
+    const dateForDel = date.setHours(date.getHours() - 2);
+    const delUser = await User.destroy({
+      where: {
+        updated_at: {
+          [Op.lt]: dateForDel,
+        },
+      },
+    });
+    return res.status(200).send({ data: delUser });
   } catch (error) {
     next(error);
   }
