@@ -31,7 +31,7 @@ const roomsSlice = createSlice({
     rooms: [],
     error: null,
     isFetching: false,
-    roomAuth: null
+    room: null
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -46,21 +46,21 @@ const roomsSlice = createSlice({
     builder.addCase(addRoom.fulfilled, (state, action) => {
       state.isFetching = false;
       state.error = null;
-      state.roomAuth = action.payload;
+      state.room = action.payload;
     });
     builder.addCase(addRoom.rejected, rejectReducer);
     builder.addCase(getRoomByName.pending, pendingReducer);
     builder.addCase(getRoomByName.fulfilled, (state, action) => {
       state.isFetching = false;
       state.error = null;
-      state.roomAuth = action.payload;
+      state.room = action.payload;
     });
     builder.addCase(getRoomByName.rejected, rejectReducer);
     builder.addCase(delRooms.pending, pendingReducer);
     builder.addCase(delRooms.fulfilled, (state, action) => {
       state.isFetching = false;
       state.error = null;
-      state.roomAuth = action.payload;
+      state.room = action.payload;
     });
     builder.addCase(delRooms.rejected, rejectReducer);
   },

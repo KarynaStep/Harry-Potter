@@ -8,24 +8,14 @@ module.exports.createRoom = async (req, res, next) => {
   try {
     const { body } = req;
     const values = _.pick(body, attrs);
-    console.log(values);
-    const [room] = await Room.findOrCreate({
-      where: {
-        name: values.name,
-      },
-      defaults: {
-        name: values.name,
-        standardDeck: values.standardDeck,
-        proDeck: values.proDeck,
-      },
-    });
+    console.log('values', values);
 
-    console.log('room', room);
-    if (!room) {
-      return next(createError(400, 'Room not created'));
+    const room = await Room.findOne({ name: values.name });
+    if (room) {
+      return res.status(200).send({ data: room });
     }
-
-    res.status(201).send({ data: room });
+    const newRoom = await Room.create(body);
+    res.status(201).send({ data: newRoom });
   } catch (error) {
     next(error);
   }
@@ -33,8 +23,6 @@ module.exports.createRoom = async (req, res, next) => {
 
 module.exports.getRoom = async (req, res, next) => {
   try {
-    const { body } = req;
-    const values = _.pick(body, attrs);
     const { roomInstance } = req;
     res.status(200).send({ data: roomInstance });
   } catch (error) {
@@ -88,11 +76,10 @@ module.exports.deleteRoom = async (req, res, next) => {
 module.exports.getRoomForName = async (req, res, next) => {
   try {
     const { body } = req;
-    console.log(body);
     const values = _.pick(body, attrs);
-    console.log(values);
+    console.log(values.name);
     
-    const room = await Room.findOne({ where: { name: values.name } });
+    const room = await Room.findOne({ where: { name: values.name} });
     if (!room) {
       return next(createError(404, 'Room not find'));
     }

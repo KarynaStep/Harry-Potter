@@ -11,11 +11,11 @@ const RoomForGame = () => {
   const { users, error, isFetching, userAuth } = useSelector(
     (state) => state.users
   );
-  const { errorRoom, isFetchingRoom, roomAuth } = useSelector(
+  const { errorRoom, isFetchingRoom, room } = useSelector(
     (state) => state.rooms
   );
 
-  console.log('roomAuth', roomAuth);
+  console.log('room', room);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -28,52 +28,48 @@ const RoomForGame = () => {
     .getItem('nameUser')
     .replace(/[^a-zа-яёїієґ0-9]/gi, '');
 
-  
-
   useEffect(() => {
     dispatch(sendUsersByRoom({ nameRoom: nameRoomInLS }));
     dispatch(getRoomByName({ name: nameRoomInLS }));
   }, [dispatch, userAuth]);
+
   useEffect(() => {
     const renderUser = () => {
-    dispatch(sendUsersByRoom({ nameRoom: nameRoomInLS }));
-    console.log('renderUser');
-  };
+      dispatch(sendUsersByRoom({ nameRoom: nameRoomInLS }));
+      console.log('renderUser');
+    };
     if (users) {
       const timerId = setInterval(renderUser, 10000);
-    setTimeout(() => clearInterval(timerId), 30000);
+      setTimeout(() => clearInterval(timerId), 30000);
     }
   }, []);
 
-  // const changeIdUser = (users) => {
-  //   const idCardsInRoom = [];
-  //   let idCard = getRandomInt(0, maxValueForRandom);
-  //   if (foundRoom.proDeck) {
-  //     maxValueForRandom = CONSTANTS.MAX_VALUE_CARDS_PRO;
-  //   }
-  //   const idCardInRoom = [];
-  //   users.forEach((user) => {
-  //     console.log('idCardInRoom', idCardInRoom);
-  //     while (idCardInRoom.includes(user.idCard)) {
-  //       idCard = getRandomInt(0, maxValueForRandom);
-  //       console.log('repit');
-  //       dispatch(updateOneUser([user.id, { idCard: idCard }]));
-  //     }
-  //     idCardsInRoom.push(user.idCard);
-  //   });
-  //   console.log('idCardInRoom in changeIdUser', idCardsInRoom);
-  // arr.map((n, i, a) => a.indexOf(n) !== a.lastIndexOf(n));
-
-  // console.log(idCard);
-
-  // dispatch(updateOneUser([user, { idCard: idCard }]));
-  // };
+  const changeIdUser = (users) => {
+    console.log(users);
+    const idCardInRoom = [];
+    let idCard = getRandomInt(0, maxValueForRandom);
+    if (room.proDeck) {
+      maxValueForRandom = CONSTANTS.MAX_VALUE_CARDS_PRO;
+    }
+    
+    users.forEach((user) => {
+      while (idCardInRoom.includes(user.idCard)) {
+        while (idCardInRoom.includes(idCard)) {
+          idCard = getRandomInt(0, maxValueForRandom);
+        }
+        dispatch(updateOneUser([user.id, { idCard: idCard }]));
+      }
+      idCardInRoom.push(user.idCard);
+      console.log('idCardInRoom', idCardInRoom);
+      return
+    });
+  };
 
   const handelClickExit = () => navigate('/');
 
   const handelClick = (id) => {
     let idCard = getRandomInt(0, maxValueForRandom);
-    if (roomAuth.proDeck) {
+    if (room.proDeck) {
       maxValueForRandom = CONSTANTS.MAX_VALUE_CARDS_PRO;
     }
     const idCardInRoom = [];
@@ -115,8 +111,7 @@ const RoomForGame = () => {
       {isFetching && <p>Loading...</p>}
       {errorRoom && <p>{error}</p>}
       {isFetchingRoom && <p>Loading...</p>}
-      {/* {!errorRoom &&
-        !isFetchingRoom && foundRoom && changeIdUser(users)} */}
+      {!errorRoom && !isFetchingRoom && room && changeIdUser(users)}
       {!error && !isFetching && users && (
         <article className={styles.container_for_cards}>
           {users.map(mapUsers)}
