@@ -77,7 +77,6 @@ module.exports.getRoomForName = async (req, res, next) => {
   try {
     const { body } = req;
     const values = _.pick(body, attrs);
-    console.log(values.name);
     
     const room = await Room.findOne({ where: { name: values.name} });
     if (!room) {

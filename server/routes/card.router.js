@@ -24,7 +24,7 @@ cardRouter
   .route('/:idCard')
   .all(checkCard)
   .get(CardController.getCard)
-  .patch(singleUpload('picture'), CardController.updateCard)
+  .patch(upload.single('picture'), CardController.updateCard)
   .delete(CardController.deleteCard);
 
   

@@ -87,8 +87,7 @@ module.exports.sendUsersByRoom = async (req, res, next) => {
     if (users.length === 0) {
       return res.status(204).send({ data: 'User list is empty' });
     }
-
-    console.log(users[0].Card.picture, 'picture');
+    
 
     for (const user of users) {
       const getObjectParams = {

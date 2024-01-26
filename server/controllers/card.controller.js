@@ -55,8 +55,7 @@ module.exports.createCard = async (req, res, next) => {
       Body: file.buffer,
       ContentType: file.mimetype,
     };
-    // console.log(params);
-    // console.log(s3);
+    
     const command = new PutObjectCommand(params);
 
     await s3.send(command)
@@ -121,7 +120,7 @@ module.exports.updateCard = async (req, res, next) => {
     const { body, cardInstance, file } = req;
     const values = _.pick(body, attrs);
     if (file) {
-      values.picture = file.filename;
+      values.picture = file.originalname;
 
       const params = {
         Bucket: bucketName,

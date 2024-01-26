@@ -17,7 +17,6 @@ const FormAddCard = () => {
 
   const submit = (values, formikBag) => {
     dispatch(addCard(values));
-    console.log(values);
     formikBag.resetForm();
   };
 

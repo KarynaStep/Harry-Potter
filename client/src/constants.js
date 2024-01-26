@@ -3,10 +3,13 @@ const CONSTANTS = {
   MIN_VALUE: 1,
   MAX_VALUE_CARDS: 56,
   MAX_VALUE_CARDS_PRO: 101,
-  // MAX_VALUE_FOR_RANDOM: 34,
   WEBSOCKET_EVENTS: {
     NEW_USER: 'NEW_USER',
     ERR_USER: 'ERR_USER',
+  },
+  ARRAY_CARDS: {
+    CARDS: [],
+    CARDS_PRO: [],
   },
 };
 

@@ -49,7 +49,6 @@ const RegistrationWindow = (props) => {
       idCard: idCard,
       nameRoom: values.nameRoom,
     };
-    console.log(user);
     dispatch(addUser(user));
 
     localStorage.setItem('nameUser', JSON.stringify(values.nameUser));

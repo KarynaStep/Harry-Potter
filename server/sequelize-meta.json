@@ -8,5 +8,7 @@
   "20231216163131-create-card.js",
   "20231216163155-create-room.js",
   "b20231216163142-create-user.js",
-  "20231222160449-create-card.js"
+  "20231222160449-create-card.js",
+  "20231222160458-create-room.js",
+  "20231222160506-create-user.js"
 ]
