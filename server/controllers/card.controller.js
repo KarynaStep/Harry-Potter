@@ -17,15 +17,15 @@ dotenv.config();
 
 
 
-const bucketName = process.env.BUCKET_NAME;
-const bucketRegion = process.env.BUCKET_REGION;
-const accessKey = process.env.ACCESS_KEY;
-const secretAccessKey = process.env.SECRET_ACCESS_KEY;
+// const bucketName = process.env.BUCKET_NAME;
+// const bucketRegion = process.env.BUCKET_REGION;
+// const accessKey = process.env.ACCESS_KEY;
+// const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
-// const bucketName = 'hp-game';
-// const bucketRegion = 'eu-central-1';
-// const accessKey = 'AKIAVRUVSVTIR565TXV2';
-// const secretAccessKey = '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';
+const bucketName = 'hp-game';
+const bucketRegion = 'eu-central-1';
+const accessKey = 'AKIAVRUVSVTIR565TXV2';
+const secretAccessKey = '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';
 
 const s3 = new S3Client({
   credentials: {
@@ -122,11 +122,24 @@ module.exports.updateCard = async (req, res, next) => {
     const values = _.pick(body, attrs);
     if (file) {
       values.picture = file.filename;
+
+      const params = {
+        Bucket: bucketName,
+        Key: file.originalname,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      };
+      const command = new PutObjectCommand(params);
+
+      await s3.send(command);
+
     }
     const updatedCard = await cardInstance.update(values);
     if (!updatedCard) {
       return next(createError(404, 'Card not updated'));
     }
+
+    
     return res.status(200).send({ data: updatedCard });
   } catch (error) {
     next(error);

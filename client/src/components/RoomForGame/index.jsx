@@ -33,6 +33,8 @@ const RoomForGame = () => {
     dispatch(getRoomByName({ name: nameRoomInLS }));
   }, [dispatch, userAuth]);
 
+  
+
   useEffect(() => {
     const renderUser = () => {
       dispatch(sendUsersByRoom({ nameRoom: nameRoomInLS }));
