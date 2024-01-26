@@ -1,13 +1,21 @@
 const { Router } = require('express');
 const CardController = require('../controllers/card.controller');
 const { singleUpload } = require('../middlewares/upload.mw');
+// singleUpload('picture');
 const { checkCard } = require('../middlewares/cards.mw');
+
+const multer = require('multer');
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage })
+
+
 
 const cardRouter = Router();
 
 cardRouter
   .route('/')
-  .post(singleUpload('picture'), CardController.createCard)
+  .post(upload.single('picture'), CardController.createCard)
   .get(CardController.getCardsNotPro);
 
 cardRouter.route('/pro').get(CardController.getCardPro);
@@ -20,5 +28,4 @@ cardRouter
   .delete(CardController.deleteCard);
 
   
-
 module.exports = cardRouter;

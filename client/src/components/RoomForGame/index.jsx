@@ -47,11 +47,10 @@ const RoomForGame = () => {
   const changeIdUser = (users) => {
     console.log(users);
     const idCardInRoom = [];
-    let idCard = getRandomInt(0, maxValueForRandom);
     if (room.proDeck) {
       maxValueForRandom = CONSTANTS.MAX_VALUE_CARDS_PRO;
     }
-    
+    let idCard = getRandomInt(0, maxValueForRandom);
     users.forEach((user) => {
       while (idCardInRoom.includes(user.idCard)) {
         while (idCardInRoom.includes(idCard)) {
@@ -90,10 +89,7 @@ const RoomForGame = () => {
       <div className={styles.card} key={user.id}>
         <h3>{user.nameUser}</h3>
         {user.Card['picture'] && (
-          <img
-            src={`./images/heroes/${user.Card['picture']}`}
-            alt={user.Card['name']}
-          />
+          <img src={user.Card['picture']} alt={user.Card['name']} />
         )}
         <h3>{user.Card['name']}</h3>
         <p>{user.Card['description']}</p>
@@ -111,7 +107,7 @@ const RoomForGame = () => {
       {isFetching && <p>Loading...</p>}
       {errorRoom && <p>{error}</p>}
       {isFetchingRoom && <p>Loading...</p>}
-      {!errorRoom && !isFetchingRoom && room && changeIdUser(users)}
+      {!errorRoom && !isFetchingRoom && room && users && changeIdUser(users)}
       {!error && !isFetching && users && (
         <article className={styles.container_for_cards}>
           {users.map(mapUsers)}

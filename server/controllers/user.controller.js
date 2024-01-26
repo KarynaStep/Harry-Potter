@@ -1,8 +1,30 @@
 const _ = require('lodash');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
+const {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} = require('@aws-sdk/client-s3');
 const createError = require('http-errors');
 const { Room, User, Card } = require('../models');
 const { Op } = require('sequelize');
 const attrs = ['nameUser', 'idCard', 'nameRoom'];
+
+
+const bucketName = 'hp-game';
+const bucketRegion = 'eu-central-1';
+const accessKey = 'AKIAVRUVSVTIR565TXV2';
+const secretAccessKey = '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';
+
+const s3 = new S3Client({
+  credentials: {
+    accessKeyId: accessKey,
+    secretAccessKey: secretAccessKey,
+  },
+  region: bucketRegion,
+});
+
+
 
 module.exports.createUser = async (req, res, next) => {
   try {
@@ -65,6 +87,19 @@ module.exports.sendUsersByRoom = async (req, res, next) => {
     if (users.length === 0) {
       return res.status(204).send({ data: 'User list is empty' });
     }
+
+    console.log(users[0].Card.picture, 'picture');
+
+    for (const user of users) {
+      const getObjectParams = {
+      Bucket: bucketName,
+      Key: user.Card.picture,
+    };
+      const command = new GetObjectCommand(getObjectParams);
+      const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+      user.Card.picture = url
+    }
+    
     
       res.status(200).send({ data: users });
   } catch (error) {
