@@ -1,19 +1,16 @@
-FROM node:16.15.1-alpine3.16
+FROM node:20.8.1-alpine3.18
 
 ARG NODE_ENV="development"
-
-RUN mkdir -p ./client
+ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /client
 
 COPY package*.json ./
 
+RUN npm install
+
 COPY . .
 
 EXPOSE 5000
 
-RUN npm install
-
-RUN chown -R node:node /client/node_modules
-
-CMD npm start
+CMD ["npm", "run", "start"]

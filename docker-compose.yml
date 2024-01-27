@@ -1,45 +1,84 @@
-version: '3.8'
+version: '2.4'
 
 services:
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=stepanova.carina98@gmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
   front-react:
     restart: always
-    container_name: squadhelp_front-react
-    build:
-      context: ./client
-    # environment:
-    #   NODE_ENV: development
+    container_name: frontend
+    image: registry.digitalocean.com/harry-potter/frontend:v1.0-test-1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front-react.rule=Host(`harry-potter.pp.ua`)"
+      - "traefik.http.routers.front-react.entrypoints=websecure"
+      - "traefik.http.routers.front-react.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.front-react.priority=2"
+      - "traefik.http.services.front-react.loadbalancer.server.port=5000"
+    environment:
+      - API_HOSTNAME=${API_HOSTNAME}
+    volumes:
+      - heroes:/client/public/images/heroes
+      - ./heroes:/client/public/images/heroes
     depends_on:
       - server-dev
-    volumes:
-      - ./client:/client
-    ports:
-      - "5000:3000"
 
   server-dev:
     restart: always
-    container_name: squadhelp_server
-    build:
-      context: ./server
-    # environment:
-    #   NODE_ENV: development
-    ports:
-      - "3000:3000"
-    depends_on:
-      db-postgres-hp: 
-        condition: service_completed_successfully
+    container_name: ${API_HOSTNAME}
+    image: registry.digitalocean.com/harry-potter/backend:v1.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server-dev.rule=Host(`harry-potter.pp.ua`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.server-dev.entrypoints=websecure"
+      - "traefik.http.routers.server-dev.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.server-dev.priority=2"
+      - "traefik.http.services.server-dev.loadbalancer.server.port=3000"
+    environment:
+      - DB_HOST=${DB_HOST}
     volumes:
-      - ./server:/server
+      - heroes:/client/public/images/heroes
+      - ./heroes:/client/public/images/heroes
+    depends_on:
+      db:
+        condition: service_healthy
 
-
-  db: 
+  db:
     image: postgres:13.2-alpine
     restart: always
-    container_name: db-postgres-hp
+    container_name: ${DB_HOST}
     volumes:
-    - ./.database/postgres/data:/var/lib/postgres/data
-    entrypoint: 
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=hp
+    - ./sql:/docker-entrypoint-initdb.d
+    - hp-db:/var/lib/postgres/data
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
-      - 5432:5432  
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  hp-db:
+  heroes:
