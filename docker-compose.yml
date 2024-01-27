@@ -1,52 +1,76 @@
 version: '2.4'
 
 services:
+  traefik:
+    image: "traefik:v2.10"
+    container_name: "traefik"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.email=stepanova.carina98@gmail.com"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
   front-react:
     restart: always
     container_name: frontend
-    image: harry-fe-test
+    image: registry.digitalocean.com/harry-potter/frontend:v1.0-test-1
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front-react.rule=Host(`harry-potter.pp.ua`)"
+      - "traefik.http.routers.front-react.entrypoints=websecure"
+      - "traefik.http.routers.front-react.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.front-react.priority=2"
+      - "traefik.http.services.front-react.loadbalancer.server.port=5000"
     environment:
-      - API_HOSTNAME=backend
+      - API_HOSTNAME=${API_HOSTNAME}
     volumes:
       - heroes:/client/public/images/heroes
-    build:
-      context: ./client
-      args:
-        NODE_ENV: development
+      - ./heroes:/client/public/images/heroes
     depends_on:
       - server-dev
-    ports:
-      - "5000:5000"
 
   server-dev:
     restart: always
-    container_name: api
-    image: harry-be-test
+    container_name: ${API_HOSTNAME}
+    image: registry.digitalocean.com/harry-potter/backend:v1.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.server-dev.rule=Host(`harry-potter.pp.ua`) && PathPrefix(`/api`)"
+      - "traefik.http.routers.server-dev.entrypoints=websecure"
+      - "traefik.http.routers.server-dev.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.server-dev.priority=2"
+      - "traefik.http.services.server-dev.loadbalancer.server.port=3000"
     environment:
-      - DB_HOST=postgres
-    build:
-      context: ./server
-      args:
-        NODE_ENV: development
-    ports:
-      - "3000:3000"
+      - DB_HOST=${DB_HOST}
     volumes:
       - heroes:/client/public/images/heroes
+      - ./heroes:/client/public/images/heroes
     depends_on:
       db:
         condition: service_healthy
 
-
-  db: 
+  db:
     image: postgres:13.2-alpine
     restart: always
-    container_name: postgres
+    container_name: ${DB_HOST}
     volumes:
+    - ./sql:/docker-entrypoint-initdb.d
     - hp-db:/var/lib/postgres/data
-    environment: 
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=hp
+    environment:
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
     ports:
       - 5432:5432
     healthcheck:
