@@ -1,1 +1,1 @@
-DELETE  http://localhost:3000/api/cards/3 HTTP/1.1
+DELETE  http://localhost:3000/api/cards/95 HTTP/1.1

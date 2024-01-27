@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 import { roomSchema } from '../../utils/validationSchemas';
 import { getRandomInt } from '../../utils/randomNumbers';
-import { addUser, getUsers } from '../../store/usersSlice';
-import { addRoom, getRooms } from '../../store/roomsSlice';
+import { addUser } from '../../store/usersSlice';
+import { addRoom } from '../../store/roomsSlice';
 import styles from './RegistrationWindow.module.scss';
 import CONSTANTS from '../../constants';
 
@@ -19,64 +19,44 @@ const initialValues = {
 
 const RegistrationWindow = (props) => {
   const { window, setWindow } = props;
-  const { rooms } = useSelector((store) => store.rooms);
-  const { users } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    dispatch(getRooms()); // eslint-disable-next-line
-    dispatch(getUsers()); // eslint-disable-next-line
-  }, []);
-
   const submit = (values, formikBag) => {
-    let maxValueForRandom = CONSTANTS.CARDS.length;
-    let idCard = CONSTANTS.CARDS[getRandomInt(1, maxValueForRandom)];
+    CONSTANTS.MAX_VALUE_FOR_RANDOM = CONSTANTS.MAX_VALUE_CARDS;
+    let idCard = getRandomInt(1, CONSTANTS.MAX_VALUE_FOR_RANDOM);
+
+    const roomNew = {
+      name: values.nameRoom,
+      standardDeck: values.standardDeck,
+      proDeck: values.proDeck,
+    };
+    console.log(roomNew);
+    dispatch(addRoom(roomNew));
+
+    if (roomNew.proDeck) {
+      CONSTANTS.MAX_VALUE_FOR_RANDOM = CONSTANTS.MAX_VALUE_CARDS_PRO;
+      idCard = getRandomInt(0, CONSTANTS.MAX_VALUE_FOR_RANDOM);
+    }
+    if (!idCard) {
+      idCard = getRandomInt(1, CONSTANTS.MAX_VALUE_FOR_RANDOM);
+    }
+
    
 
-    if (rooms) {
-      const room = rooms.find((room) => room.name === values.nameRoom);
-      if (room) {
-        if (room.proDeck) {
-          maxValueForRandom = CONSTANTS.CARDS_PRO.length;
-        }
-        const usersInRoom = users.filter(
-          (user) => user.nameRoom === values.nameRoom
-        );
-        const idCardInRoom = [];
-        usersInRoom.forEach((user) => {
-          idCardInRoom.push(user.idCard);
-        });
-        while (idCardInRoom.includes(idCard)) {
-          idCard = CONSTANTS.CARDS_PRO[getRandomInt(0, maxValueForRandom)];
-        }
-      } else {
-        const roomNew = {
-          name: values.nameRoom,
-          standardDeck: values.standardDeck,
-          proDeck: values.proDeck,
-        };
-        dispatch(addRoom(roomNew));
-        if (roomNew.proDeck) {
-          maxValueForRandom = CONSTANTS.CARDS_PRO.length;
-          idCard = CONSTANTS.CARDS_PRO[getRandomInt(0, maxValueForRandom)];
-        }
-      }
-    }
-    
     const user = {
       nameUser: values.nameUser,
       idCard: idCard,
       nameRoom: values.nameRoom,
     };
-
     dispatch(addUser(user));
 
     localStorage.setItem('nameUser', JSON.stringify(values.nameUser));
     localStorage.setItem('nameRoom', JSON.stringify(values.nameRoom));
-
+    
     formikBag.resetForm();
-     navigate('/room');
+
+    navigate('/room');
   };
 
   const handelClick = () => setWindow(!window);

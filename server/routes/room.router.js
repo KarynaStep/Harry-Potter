@@ -8,13 +8,14 @@ roomRouter
   .route('/')
   .post(RoomController.createRoom)
   .patch(RoomController.getRoomForName)
-  .get(RoomController.getAllRooms);
+  .get(RoomController.getAllRooms)
+  .delete(RoomController.deleteRoom);
 
 roomRouter
   .route('/:idRoom')
   .all(checkRoom)
   .get(RoomController.getRoom)
-  .patch(RoomController.updateRoom)
-  .delete(RoomController.deleteRoom);
+  .patch(RoomController.updateRoom);
+  
 
 module.exports = roomRouter;

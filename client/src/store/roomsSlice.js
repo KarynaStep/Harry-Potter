@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createRoom, getAllRooms, getRoom } from '../api';
+import { createRoom, deleteRooms, getAllRooms, sendRoom } from '../api';
 import { pendingReducer, rejectReducer, decorateAsyncThunk } from './helpers';
 
 const ROOMS_SLICE_NAME = 'rooms';
@@ -11,12 +11,17 @@ export const getRooms = decorateAsyncThunk({
 
 export const getRoomByName = decorateAsyncThunk({
   type: `${ROOMS_SLICE_NAME}/getRoomByName`,
-  thunk: getRoom,
+  thunk: sendRoom,
 });
 
 export const addRoom = decorateAsyncThunk({
   type: `${ROOMS_SLICE_NAME}/addRoom`,
   thunk: createRoom,
+});
+
+export const delRooms = decorateAsyncThunk({
+  type: `${ROOMS_SLICE_NAME}/delRooms`,
+  thunk: deleteRooms,
 });
 
 
@@ -26,8 +31,7 @@ const roomsSlice = createSlice({
     rooms: [],
     error: null,
     isFetching: false,
-    roomAuth: null,
-    foundRoom: null
+    room: null
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -42,16 +46,23 @@ const roomsSlice = createSlice({
     builder.addCase(addRoom.fulfilled, (state, action) => {
       state.isFetching = false;
       state.error = null;
-      state.roomAuth = action.payload;
+      state.room = action.payload;
     });
     builder.addCase(addRoom.rejected, rejectReducer);
     builder.addCase(getRoomByName.pending, pendingReducer);
     builder.addCase(getRoomByName.fulfilled, (state, action) => {
       state.isFetching = false;
       state.error = null;
-      state.foundRoom = action.payload;
+      state.room = action.payload;
     });
     builder.addCase(getRoomByName.rejected, rejectReducer);
+    builder.addCase(delRooms.pending, pendingReducer);
+    builder.addCase(delRooms.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.error = null;
+      state.room = action.payload;
+    });
+    builder.addCase(delRooms.rejected, rejectReducer);
   },
 });
 

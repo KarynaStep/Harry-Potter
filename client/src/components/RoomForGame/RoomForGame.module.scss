@@ -6,15 +6,13 @@
   display: flex;
   flex-direction: column;
   text-align: center;
-  width: 100vw;
+  overflow-y: visible;
+  min-height: 100vh;
   background-image: url('../../../public/images/1.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   color: $colorWhite;
-  // @media screen and (min-width: $md) {
-  //   height: 110vh;
-  // }
-  h2{
+  h2 {
     font-size: 1.4em;
     margin: 5px;
   }
@@ -22,6 +20,7 @@
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+
     @media screen and (max-width: $sm) {
       flex-direction: column;
       align-items: center;
@@ -29,7 +28,7 @@
     .card {
       text-align: center;
       width: 25%;
-      h3{
+      h3 {
         font-size: 1em;
         margin: 10px;
       }
@@ -37,7 +36,7 @@
         width: 90%;
         border: 3px solid $colorDark;
       }
-        @media screen and (max-width: $sm) {
+      @media screen and (max-width: $sm) {
         width: 50%;
       }
     }

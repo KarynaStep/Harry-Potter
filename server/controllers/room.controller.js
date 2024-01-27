@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const createError = require('http-errors');
+const { Op } = require('sequelize');
 const { Room } = require('../models');
 const attrs = ['name', 'standardDeck', 'proDeck'];
 
@@ -7,12 +8,14 @@ module.exports.createRoom = async (req, res, next) => {
   try {
     const { body } = req;
     const values = _.pick(body, attrs);
-    const createdRoom = await Room.create(values);
-    if (!createdRoom) {
-      return next(createError(400, 'Room not created'));
-    }
+    console.log('values', values);
 
-    res.status(201).send({ data: createdRoom });
+    const room = await Room.findOne({ name: values.name });
+    if (room) {
+      return res.status(200).send({ data: room });
+    }
+    const newRoom = await Room.create(body);
+    res.status(201).send({ data: newRoom });
   } catch (error) {
     next(error);
   }
@@ -20,8 +23,6 @@ module.exports.createRoom = async (req, res, next) => {
 
 module.exports.getRoom = async (req, res, next) => {
   try {
-    const { body } = req;
-    const values = _.pick(body, attrs);
     const { roomInstance } = req;
     res.status(200).send({ data: roomInstance });
   } catch (error) {
@@ -57,9 +58,16 @@ module.exports.updateRoom = async (req, res, next) => {
 
 module.exports.deleteRoom = async (req, res, next) => {
   try {
-    const { roomInstance } = req;
-    const result = await roomInstance.destroy();
-    return res.status(200).send({ data: roomInstance });
+    const date = new Date();
+    const dateForDel = date.setHours(date.getHours() - 2);
+    const delRoom = await Room.destroy({
+      where: {
+        updated_at: {
+          [Op.lt]: dateForDel,
+        },
+      },
+    });
+    return res.status(200).send({ data: delRoom });
   } catch (error) {
     next(error);
   }
@@ -69,12 +77,11 @@ module.exports.getRoomForName = async (req, res, next) => {
   try {
     const { body } = req;
     const values = _.pick(body, attrs);
-
-    const room = await Room.findOne({ where: { name: values.name } });
+    
+    const room = await Room.findOne({ where: { name: values.name} });
     if (!room) {
-      return next(createError(404, 'Room not updated'));
+      return next(createError(404, 'Room not find'));
     }
-
     res.status(200).send({ data: room });
   } catch (error) {
     next(error);

@@ -1,9 +1,16 @@
 const CONSTANTS = {
   PORT: 3000,
   MIN_VALUE: 1,
-  MAX_VALUE: 10,
-  CARDS: [],
-  CARDS_PRO: [],
+  MAX_VALUE_CARDS: 56,
+  MAX_VALUE_CARDS_PRO: 101,
+  WEBSOCKET_EVENTS: {
+    NEW_USER: 'NEW_USER',
+    ERR_USER: 'ERR_USER',
+  },
+  ARRAY_CARDS: {
+    CARDS: [],
+    CARDS_PRO: [],
+  },
 };
 
 export default CONSTANTS;

@@ -13,13 +13,17 @@
   background-color: #f8e2a6;
   color: $colorDark;
   text-align: center;
-  .title{
+  @media screen and (max-width: $sm) {
+    width: 100%;
+    height: 100%;
+  }
+  .title {
     font-weight: 900;
   }
   label {
     display: block;
     margin: 10px;
-    
+
     span {
       @media screen and (max-width: $sm) {
         display: block;

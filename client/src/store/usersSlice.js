@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import {createUser, getAllUsers, sendUsersInRoom, updateUser } from '../api';
+import {createUser, deletelUsers, getAllUsers, sendUsersInRoom, updateUser } from '../api';
 import { pendingReducer, rejectReducer, decorateAsyncThunk } from './helpers';
 
 const USERS_SLICE_NAME = 'users';
@@ -26,6 +26,11 @@ export const getUsers = decorateAsyncThunk({
   thunk: getAllUsers,
 });
 
+export const delUsers = decorateAsyncThunk({
+  type: `${USERS_SLICE_NAME}/delUsers`,
+  thunk: deletelUsers,
+});
+
 
 const usersSlice = createSlice({
   name: USERS_SLICE_NAME,
@@ -35,7 +40,15 @@ const usersSlice = createSlice({
     isFetching: false,
     userAuth: null,
   },
-  reducers: {},
+  reducers: {
+    // addUserSocket: (state, action) => {
+    //   state.error = null;
+    //   state.users.push(...action.payload);
+    // },
+    // errUserSocket: (state, action) => {
+    //   state.error = action.payload;
+    // },
+  },
   extraReducers: (builder) => {
     builder.addCase(sendUsersByRoom.pending, pendingReducer);
     builder.addCase(sendUsersByRoom.fulfilled, (state, action) => {
@@ -65,7 +78,16 @@ const usersSlice = createSlice({
       state.userAuth = action.payload;
     });
     builder.addCase(updateOneUser.rejected, rejectReducer);
+    builder.addCase(delUsers.pending, pendingReducer);
+    builder.addCase(delUsers.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.error = null;
+      state.userAuth = action.payload;
+    });
+    builder.addCase(delUsers.rejected, rejectReducer);
   },
 });
+
+export const { addUserSocket, errUserSocket } = usersSlice.actions;
 
 export default usersSlice.reducer;

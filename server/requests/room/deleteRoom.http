@@ -1,1 +1,1 @@
-DELETE  http://localhost:3000/api/rooms/55 HTTP/1.1
+DELETE  http://localhost:3000/api/rooms HTTP/1.1

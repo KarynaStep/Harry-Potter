@@ -8,12 +8,13 @@ userRouter
   .route('/')
   .get(UserController.getAllUsers)
   .post(UserController.createUser)
-  .patch(UserController.sendUsersByRoom);
+  .patch(UserController.sendUsersByRoom)
+  .delete(UserController.deleteUser);
 
 userRouter
   .route('/:idUser').all(checkUser)
   .get(UserController.getUser)
   .patch(UserController.updateUser)
-  .delete(UserController.deleteUser);
+  
 
 module.exports = userRouter;
