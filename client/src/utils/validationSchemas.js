@@ -24,3 +24,10 @@ export const cardSchema = Yup.object({
   isProDeck: Yup.boolean('must be boolean'),
 });
 
+export const passwordSchema = Yup.object({
+  password: Yup.string()
+    .trim()
+    .matches(/^.{2,63}$/gi, 'length 2..64')
+    .required('required'),
+});
+

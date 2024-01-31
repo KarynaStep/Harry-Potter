@@ -1,31 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { useDispatch } from 'react-redux';
-import { cardSchema } from '../../utils/validationSchemas';
+import { cardSchema, passwordSchema } from '../../utils/validationSchemas';
 import styles from './FormAddCard.module.scss';
 import { addCard } from '../../store/cardsSlice';
 
-const initialValues = {
+const initialValuesForCard = {
   name: '',
   picture: '',
   description: '',
   isProDeck: false,
 };
 
+const initialValuesForPassword = {
+  password: '',
+};
+
 const FormAddCard = () => {
+  const [windowPassword, setWindowPassword] = useState(true);
   const dispatch = useDispatch();
 
-  const submit = (values, formikBag) => {
+  const submitForCard = (values, formikBag) => {
     dispatch(addCard(values));
+    formikBag.resetForm();
+  };
+
+  const submitForPassword = (values, formikBag) => {
+    setWindowPassword(!windowPassword)
     formikBag.resetForm();
   };
 
   return (
     <section className={styles.container}>
-      
       <Formik
-        initialValues={initialValues}
-        onSubmit={submit}
+        initialValues={initialValuesForPassword}
+        onSubmit={submitForPassword}
+        validationSchema={passwordSchema}
+      >
+        return (
+        <Form encType="multipart/form-data" className={styles.form}>
+          <label>
+            <span>Password:</span>
+            <Field name="password" />
+            <ErrorMessage name="password" />
+          </label>
+          <button className={styles.btn_send} type="submit">
+            send
+          </button>
+        </Form>
+        );
+      </Formik>
+      <Formik
+        initialValues={initialValuesForCard}
+        onSubmit={submitForCard}
         validationSchema={cardSchema}
       >
         {(formikProps) => {

@@ -1,5 +1,4 @@
 const _ = require('lodash');
-const multer = require('multer');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const {
   S3Client,
@@ -11,21 +10,12 @@ const dotenv = require('dotenv');
 const createError = require('http-errors');
 const { Card } = require('../models');
 
-
-
 dotenv.config();
 
-
-
-// const bucketName = process.env.BUCKET_NAME;
-// const bucketRegion = process.env.BUCKET_REGION;
-// const accessKey = process.env.ACCESS_KEY;
-// const secretAccessKey = process.env.SECRET_ACCESS_KEY;
-
-const bucketName = 'hp-game';
-const bucketRegion = 'eu-central-1';
-const accessKey = 'AKIAVRUVSVTIR565TXV2';
-const secretAccessKey = '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';
+const bucketName = process.env.BUCKET_NAME;
+const bucketRegion = process.env.BUCKET_REGION;
+const accessKey = process.env.ACCESS_KEY;
+const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
 const s3 = new S3Client({
   credentials: {

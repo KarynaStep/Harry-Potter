@@ -15,15 +15,7 @@ const Home = () => {
     setWindow(!window);
     return;
   };
-  
 
-  // cron.schedule(
-  //   '45 3 * * *',
-  //   () => {
-  //     dispatch(delRooms());
-  //     dispatch(delRooms());
-  //   }
-  // );
 
   return (
     <section className={styles.container}>
