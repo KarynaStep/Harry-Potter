@@ -84,17 +84,13 @@ docker-compose build <service_name>
 
 #### Environment variables
 
-| Name                 | Description                                  | Default    |
-| -------------------- | -------------------------------------------- | ---------- |
-| `POSTGRES_PASSWORD`  | PostgreSQL root password                     | `postgres` |
-| `POSTGRES_USER`      | PostgreSQL root user                         | `postgres` |
-| `POSTGRES_DB`        | PostgreSQL database name                     | `hp`       |
-| `DB_HOST`            | PostgreSQL hostname                          | `postgres` |
-| `REACT_APP_API_HOST` | API host in `<hostname>:<port>` format       | `backend`  |
-| `BUCKET_NAME`        | AWS S3 bucket name to use by the application |            |
-| `BUCKET_REGION`      | AWS region                                   |            |
-| `ACCESS_KEY`         | AWS Access Key ID for programmatical calls   |            |
-| `SECRET_ACCESS_KEY`  | AWS Secret Key for programmatical calls      |            |
+| Name                                      | Description                                                            | Default                                             |
+| ----------------------------------------- | ---------------------------------------------------------------------- | --------------------------------------------------- |
+| `POSTGRES_PASSWORD`                   | PostgreSQL root password                                   | `postgres`                                              |
+| `POSTGRES_USER`                      | PostgreSQL root user                                      | `postgres` |
+| `POSTGRES_DB`                    | Default PostgreSQL database name | `hp`                             |
+| `DB_HOST`                        | PostgreSQL hostname                               | `postgres`               |
+| `API_HOSTNAME`                               | Default API hostname                                             | `backend`               |
 
 ### Run containers
 
@@ -107,12 +103,6 @@ docker-compose up -d
 This command will use `docker-compose.yml` file to create Docker containers. The service configuration will be overrided with `docker-compose.override.yml` values
 
 The deployed Stack can be accessed from a browser by connecting to the `client` service at `http://localhost:5000`.
-
-To build images and then run the stack, use:
-
-```bash
-docker-compose up --build -d
-```
 
 Use the following command to stop and remove containers:
 

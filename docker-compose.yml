@@ -24,23 +24,26 @@ services:
   front-react:
     restart: always
     container_name: frontend
-    image: registry.digitalocean.com/harry-potter/frontend:v1.1
+    image: registry.digitalocean.com/harry-potter/frontend:v1.0-test-1
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.front-react.rule=Host(`harry-potter.pp.ua`)"
       - "traefik.http.routers.front-react.entrypoints=websecure"
       - "traefik.http.routers.front-react.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.front-react.priority=1"
+      - "traefik.http.routers.front-react.priority=2"
       - "traefik.http.services.front-react.loadbalancer.server.port=5000"
     environment:
-      - REACT_APP_API_HOST=${API_HOST}
+      - API_HOSTNAME=${API_HOSTNAME}
+    volumes:
+      - heroes:/client/public/images/heroes
+      - ./heroes:/client/public/images/heroes
     depends_on:
       - server-dev
 
   server-dev:
     restart: always
-    container_name: backend
-    image: registry.digitalocean.com/harry-potter/backend:v1.1
+    container_name: ${API_HOSTNAME}
+    image: registry.digitalocean.com/harry-potter/backend:v1.0
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.server-dev.rule=Host(`harry-potter.pp.ua`) && PathPrefix(`/api`)"
@@ -50,11 +53,9 @@ services:
       - "traefik.http.services.server-dev.loadbalancer.server.port=3000"
     environment:
       - DB_HOST=${DB_HOST}
-      - PORT=${API_PORT}
-      - BUCKET_NAME=${BUCKET_NAME}
-      - BUCKET_REGION=${BUCKET_REGION}
-      - ACCESS_KEY=${ACCESS_KEY}
-      - SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
+    volumes:
+      - heroes:/client/public/images/heroes
+      - ./heroes:/client/public/images/heroes
     depends_on:
       db:
         condition: service_healthy
@@ -70,6 +71,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - 5432:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -78,3 +81,4 @@ services:
 
 volumes:
   hp-db:
+  heroes:

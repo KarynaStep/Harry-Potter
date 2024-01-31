@@ -2,14 +2,14 @@ const fs = require('fs');
 
 module.exports = {
   development: {
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
-    database: process.env.DB_DATABASE || 'hp',
-    host: process.env.DB_HOST || 'localhost',
+    username: process.env.DB_USERNAME || "postgres",
+    password: process.env.DB_PASSWORD || "postgres",
+    database: process.env.DB_DATABASE || "hp",
+    host: process.env.DB_HOST || "localhost",
     port: process.env.DB_PORT || 5432,
-    dialect: 'postgres',
-    migrationStorage: 'json',
-    seederStorage: 'json'
+    dialect: "postgres",
+    migrationStorage: "json",
+    seederStorage: "json"
   },
   test: {
     username: process.env.CI_DB_USERNAME,
@@ -23,13 +23,19 @@ module.exports = {
     }
   },
   production: {
-    username: process.env.DB_USERNAME || 'postgres',
-    password: process.env.DB_PASSWORD || 'postgres',
-    database: process.env.DB_DATABASE || 'hp',
-    host: process.env.DB_HOST || 'localhost',
+    username: process.env.DB_USERNAME || "postgres",
+    password: process.env.DB_PASSWORD || "postgres",
+    database: process.env.DB_DATABASE || "hp",
+    host: process.env.DB_HOST || "localhost",
     port: process.env.DB_PORT || 5432,
-    dialect: 'postgres',
-    migrationStorage: 'json',
-    seederStorage: 'json'
+    dialect: "postgres",
+    migrationStorage: "json",
+    seederStorage: "json"
+    // dialectOptions: {
+    //   bigNumberStrings: true,
+    //   ssl: {
+    //     ca: fs.readFileSync(__dirname + '/mysql-ca-main.crt')
+    //   }
+    // }
   }
 };
