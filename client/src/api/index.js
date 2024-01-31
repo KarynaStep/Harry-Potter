@@ -1,8 +1,7 @@
 import axios from 'axios';
 
-
 const httpClient = axios.create({
-  baseURL: `http://${process.env.API_HOSTNAME || "localhost"}:3000/api`,
+  baseURL: `http://${process.env.REACT_APP_API_HOST || "localhost"}/api`,
 });
 
 export const createUser = (values) => httpClient.post('/users', values);
