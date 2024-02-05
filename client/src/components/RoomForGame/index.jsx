@@ -63,13 +63,13 @@ const RoomForGame = () => {
       deck = CONSTANTS.ARRAY_CARDS.CARDS_PRO;
     }
     let randomNumbers = getRandomInt(0, maxValueForRandom);
-    let idCard = CONSTANTS.ARRAY_CARDS.CARDS_PRO[randomNumbers];
+    let idCard = deck[randomNumbers];
 
     users.forEach((user) => {
       if (idCardInRoom.includes(user.idCard)) {
         while (idCardInRoom.includes(idCard)) {
           randomNumbers = getRandomInt(0, maxValueForRandom);
-          idCard = CONSTANTS.ARRAY_CARDS.CARDS_PRO[randomNumbers];
+          idCard = deck[randomNumbers];
         }
         dispatch(updateOneUser([user.id, { idCard: idCard }]));
       }

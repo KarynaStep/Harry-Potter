@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 const httpClient = axios.create({
-  baseURL: `http://${process.env.REACT_APP_API_HOST || "localhost"}/api`,
+  baseURL: `http://${process.env.REACT_APP_API_HOST || 'localhost:3000'}/api`,
 });
-
+ 
 export const createUser = (values) => httpClient.post('/users', values);
 export const sendUsersInRoom = (values) => httpClient.patch('/users', values);
 export const getAllUsers = () => httpClient.get('/users');

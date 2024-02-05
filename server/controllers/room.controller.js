@@ -8,14 +8,16 @@ module.exports.createRoom = async (req, res, next) => {
   try {
     const { body } = req;
     const values = _.pick(body, attrs);
-    console.log('values', values);
 
-    const room = await Room.findOne({ name: values.name });
+    console.log(values.name);
+    const room = await Room.findOne({ where: { name: values.name } });
     if (room) {
       return res.status(200).send({ data: room });
     }
-    const newRoom = await Room.create(body);
+
+    const newRoom = await Room.create(values);
     res.status(201).send({ data: newRoom });
+
   } catch (error) {
     next(error);
   }

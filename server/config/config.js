@@ -9,7 +9,7 @@ module.exports = {
     port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
     migrationStorage: 'json',
-    seederStorage: 'json'
+    seederStorage: 'json',
   },
   test: {
     username: process.env.CI_DB_USERNAME,
@@ -19,8 +19,8 @@ module.exports = {
     port: 3306,
     dialect: 'mysql',
     dialectOptions: {
-      bigNumberStrings: true
-    }
+      bigNumberStrings: true,
+    },
   },
   production: {
     username: process.env.DB_USERNAME || 'postgres',
@@ -30,6 +30,6 @@ module.exports = {
     port: process.env.DB_PORT || 5432,
     dialect: 'postgres',
     migrationStorage: 'json',
-    seederStorage: 'json'
-  }
+    seederStorage: 'json',
+  },
 };
