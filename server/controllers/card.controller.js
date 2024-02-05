@@ -1,38 +1,32 @@
 const _ = require('lodash');
-const multer = require('multer');
 const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 const {
   S3Client,
   PutObjectCommand,
   GetObjectCommand,
-  DeleteObjectCommand
+  DeleteObjectCommand,
 } = require('@aws-sdk/client-s3');
 const dotenv = require('dotenv');
 const createError = require('http-errors');
 const { Card } = require('../models');
 
-
-
 dotenv.config();
-
-
-
-// const bucketName = process.env.BUCKET_NAME;
-// const bucketRegion = process.env.BUCKET_REGION;
-// const accessKey = process.env.ACCESS_KEY;
-// const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
 const bucketName = 'hp-game';
 const bucketRegion = 'eu-central-1';
 const accessKey = 'AKIAVRUVSVTIR565TXV2';
 const secretAccessKey = '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';
+// const bucketName = process.env.BUCKET_NAME;
+// const bucketRegion = process.env.BUCKET_REGION;
+// const accessKey = process.env.ACCESS_KEY;
+// const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
 const s3 = new S3Client({
   credentials: {
     accessKeyId: accessKey,
     secretAccessKey: secretAccessKey,
   },
-  region: bucketRegion
+  region: bucketRegion,
 });
 
 const attrs = ['name', 'picture', 'description', 'isProDeck'];
@@ -43,22 +37,21 @@ module.exports.createCard = async (req, res, next) => {
     const values = _.pick(body, attrs);
     if (file) {
       values.picture = file.originalname;
+      const params = {
+        Bucket: bucketName,
+        Key: file.originalname,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      };
+
+      const command = new PutObjectCommand(params);
+
+      await s3.send(command);
     }
     const createdCard = await Card.create(values);
     if (!createdCard) {
       return next(createError(400, 'Card not created'));
     }
-
-    const params = {
-      Bucket: bucketName,
-      Key: file.originalname,
-      Body: file.buffer,
-      ContentType: file.mimetype,
-    };
-    
-    const command = new PutObjectCommand(params);
-
-    await s3.send(command)
 
     res.status(201).send({ data: createdCard });
   } catch (error) {
@@ -74,7 +67,7 @@ module.exports.getCard = async (req, res, next) => {
       Bucket: bucketName,
       Key: cardInstance.picture,
     };
-  
+
     const command = new GetObjectCommand(getObjectParams);
     const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
     cardInstance.picture = url;
@@ -131,14 +124,12 @@ module.exports.updateCard = async (req, res, next) => {
       const command = new PutObjectCommand(params);
 
       await s3.send(command);
-
     }
     const updatedCard = await cardInstance.update(values);
     if (!updatedCard) {
       return next(createError(404, 'Card not updated'));
     }
 
-    
     return res.status(200).send({ data: updatedCard });
   } catch (error) {
     next(error);

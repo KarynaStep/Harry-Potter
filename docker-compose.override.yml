@@ -2,6 +2,7 @@ version: '2.4'
 
 services:
   front-react:
+    platform: linux/amd64
     build:
       context: ./client
       args:
@@ -10,7 +11,7 @@ services:
       - 5000:5000
   
   server-dev:
-    container_name: ${API_HOST}
+    platform: linux/amd64
     build: 
       context: ./server
       args:
@@ -19,8 +20,9 @@ services:
       - 3000:3000
 
   postgres:
+    platform: linux/amd64
     ports:
-      -5432:5432
+      - 5432:5432
 
   traefik:
     entrypoint: ["echo", "Disabled"]

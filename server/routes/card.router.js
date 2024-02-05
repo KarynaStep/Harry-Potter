@@ -1,15 +1,11 @@
 const { Router } = require('express');
-const CardController = require('../controllers/card.controller');
-const { singleUpload } = require('../middlewares/upload.mw');
-// singleUpload('picture');
-const { checkCard } = require('../middlewares/cards.mw');
-
 const multer = require('multer');
+
+const CardController = require('../controllers/card.controller');
+const { checkCard } = require('../middlewares/cards.mw');
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage })
-
-
 
 const cardRouter = Router();
 

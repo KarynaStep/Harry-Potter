@@ -41,13 +41,6 @@ const usersSlice = createSlice({
     userAuth: null,
   },
   reducers: {
-    // addUserSocket: (state, action) => {
-    //   state.error = null;
-    //   state.users.push(...action.payload);
-    // },
-    // errUserSocket: (state, action) => {
-    //   state.error = action.payload;
-    // },
   },
   extraReducers: (builder) => {
     builder.addCase(sendUsersByRoom.pending, pendingReducer);
@@ -87,7 +80,5 @@ const usersSlice = createSlice({
     builder.addCase(delUsers.rejected, rejectReducer);
   },
 });
-
-export const { addUserSocket, errUserSocket } = usersSlice.actions;
 
 export default usersSlice.reducer;

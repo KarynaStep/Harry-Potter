@@ -34,6 +34,7 @@ services:
       - "traefik.http.services.front-react.loadbalancer.server.port=5000"
     environment:
       - REACT_APP_API_HOST=${API_HOST}
+      - REACT_APP_ADMINISTRATOR_PASSWORD=${ADMINISTRATOR_PASSWORD}
     depends_on:
       - server-dev
 
@@ -56,10 +57,10 @@ services:
       - ACCESS_KEY=${ACCESS_KEY}
       - SECRET_ACCESS_KEY=${SECRET_ACCESS_KEY}
     depends_on:
-      db:
+      postgres:
         condition: service_healthy
 
-  db:
+  postgres:
     image: postgres:13.2-alpine
     restart: always
     container_name: ${DB_HOST}

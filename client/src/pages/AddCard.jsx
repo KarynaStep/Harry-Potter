@@ -1,10 +1,10 @@
 import React from 'react';
-import FormAddCard from '../components/FormAddCard';
+import FormPassword from '../components/FormPassword';
 
 
 const AddCard = () => {
   return (
-    <FormAddCard />
+    <FormPassword />
   );
 }
 

@@ -21,11 +21,22 @@ const RegistrationWindow = (props) => {
   const { window, setWindow } = props;
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  let deck = CONSTANTS.ARRAY_CARDS.CARDS;
+  let maxValueForRandom = CONSTANTS.ARRAY_CARDS.CARDS.length;
+
+  if (
+    !CONSTANTS.ARRAY_CARDS.CARDS.length ||
+    !CONSTANTS.ARRAY_CARDS.CARDS_PRO.length
+  ) {
+    for (let index = 1; index <= CONSTANTS.MAX_VALUE_CARDS; index++) {
+      CONSTANTS.ARRAY_CARDS.CARDS.push(index);
+    }
+    for (let index = 1; index <= CONSTANTS.MAX_VALUE_CARDS_PRO; index++) {
+      CONSTANTS.ARRAY_CARDS.CARDS_PRO.push(index);
+    }
+  }
 
   const submit = (values, formikBag) => {
-    CONSTANTS.MAX_VALUE_FOR_RANDOM = CONSTANTS.MAX_VALUE_CARDS;
-    let idCard = getRandomInt(1, CONSTANTS.MAX_VALUE_FOR_RANDOM);
-
     const roomNew = {
       name: values.nameRoom,
       standardDeck: values.standardDeck,
@@ -35,25 +46,24 @@ const RegistrationWindow = (props) => {
     dispatch(addRoom(roomNew));
 
     if (roomNew.proDeck) {
-      CONSTANTS.MAX_VALUE_FOR_RANDOM = CONSTANTS.MAX_VALUE_CARDS_PRO;
-      idCard = getRandomInt(0, CONSTANTS.MAX_VALUE_FOR_RANDOM);
-    }
-    if (!idCard) {
-      idCard = getRandomInt(1, CONSTANTS.MAX_VALUE_FOR_RANDOM);
+      maxValueForRandom = CONSTANTS.ARRAY_CARDS.CARDS_PRO.length;
+      deck = CONSTANTS.ARRAY_CARDS.CARDS_PRO;
     }
 
-   
+    let randomNumbers = getRandomInt(0, maxValueForRandom);
+    let idCard = deck[randomNumbers];
 
     const user = {
       nameUser: values.nameUser,
       idCard: idCard,
       nameRoom: values.nameRoom,
     };
+    console.log(user);
     dispatch(addUser(user));
 
     localStorage.setItem('nameUser', JSON.stringify(values.nameUser));
     localStorage.setItem('nameRoom', JSON.stringify(values.nameRoom));
-    
+
     formikBag.resetForm();
 
     navigate('/room');
