@@ -2,7 +2,7 @@ POST http://localhost:3000/api/users HTTP/1.1
 Content-Type: application/json
 
 {
-  "nameUser": "Anna",
+  "nameUser": "Andssdsdswewewdsdeeee22a",
   "idCard": 23,
-  "nameRoom": "Yay3"
+  "nameRoom": "A2"
 }
