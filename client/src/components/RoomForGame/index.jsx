@@ -1,11 +1,12 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { sendUsersByRoom, updateOneUser } from '../../store/usersSlice';
+import { sendUsersByRoom,  } from '../../store/usersSlice';
 import styles from './RoomForGame.module.scss';
 import { getRandomInt } from '../../utils/randomNumbers';
 import CONSTANTS from '../../constants';
 import { getRoomByName } from '../../store/roomsSlice';
+import { updateUser } from '../../api';
 
 const RoomForGame = () => {
   const { users, error, isFetching, userAuth } = useSelector(
@@ -45,17 +46,6 @@ const RoomForGame = () => {
     dispatch(getRoomByName({ name: nameRoomInLS }));
   }, [dispatch, userAuth]);
 
-  useEffect(() => {
-    const renderUser = () => {
-      dispatch(sendUsersByRoom({ nameRoom: nameRoomInLS }));
-      console.log('renderUser');
-    };
-    if (users) {
-      const timerId = setInterval(renderUser, 12000);
-      setTimeout(() => clearInterval(timerId), 30000);
-    }
-  }, []);
-
   const changeIdUser = (users) => {
     const idCardInRoom = [];
     if (room.proDeck) {
@@ -71,7 +61,7 @@ const RoomForGame = () => {
           randomNumbers = getRandomInt(0, maxValueForRandom);
           idCard = deck[randomNumbers];
         }
-        dispatch(updateOneUser([user.id, { idCard: idCard }]));
+        updateUser([user.id, { idCard: idCard }]);
       }
       idCardInRoom.push(user.idCard);
       return;
@@ -102,9 +92,7 @@ const RoomForGame = () => {
         deck.splice(elemIndex, 1);
       }
     });
-    
-
-    dispatch(updateOneUser([id, { idCard: idCard }]));
+    updateUser([id, { idCard: idCard }]);
   };
 
   const mapUsers = (user) => {
@@ -123,7 +111,6 @@ const RoomForGame = () => {
       </div>
     );
   };
-  
 
   return (
     <section className={styles.container}>

@@ -21,14 +21,8 @@ module.exports = app;
 const job = schedule.scheduleJob('45 3 * *', function () {
   request(
     { uri: 'http://localhost:3000/api/rooms', method: 'DELETE' },
-    function (error, response, body) {
-      console.log(body);
-    }
   );
   request(
     { uri: 'http://localhost:3000/api/users', method: 'DELETE' },
-    function (error, response, body) {
-      console.log(body);
-    }
   );
 });

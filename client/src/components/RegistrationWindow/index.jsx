@@ -2,10 +2,9 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-
 import { roomSchema } from '../../utils/validationSchemas';
 import { getRandomInt } from '../../utils/randomNumbers';
-import { addUser } from '../../store/usersSlice';
+import { createUser } from '../../api';
 import { addRoom } from '../../store/roomsSlice';
 import styles from './RegistrationWindow.module.scss';
 import CONSTANTS from '../../constants';
@@ -42,7 +41,6 @@ const RegistrationWindow = (props) => {
       standardDeck: values.standardDeck,
       proDeck: values.proDeck,
     };
-    console.log(roomNew);
     dispatch(addRoom(roomNew));
 
     if (roomNew.proDeck) {
@@ -58,8 +56,8 @@ const RegistrationWindow = (props) => {
       idCard: idCard,
       nameRoom: values.nameRoom,
     };
-    console.log(user);
-    dispatch(addUser(user));
+    
+    createUser([user]);
 
     localStorage.setItem('nameUser', JSON.stringify(values.nameUser));
     localStorage.setItem('nameRoom', JSON.stringify(values.nameRoom));

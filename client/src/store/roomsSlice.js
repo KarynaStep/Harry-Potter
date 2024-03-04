@@ -1,29 +1,64 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { createRoom, deleteRooms, getAllRooms, sendRoom } from '../api';
-import { pendingReducer, rejectReducer, decorateAsyncThunk } from './helpers';
+import { pendingReducer, rejectReducer } from './helpers';
 
 const ROOMS_SLICE_NAME = 'rooms';
 
-export const getRooms = decorateAsyncThunk({
-  type: `${ROOMS_SLICE_NAME}/getRooms`,
-  thunk: getAllRooms,
-});
+export const getRooms = createAsyncThunk(
+  `${ROOMS_SLICE_NAME}/getRooms`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await getAllRooms(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
-export const getRoomByName = decorateAsyncThunk({
-  type: `${ROOMS_SLICE_NAME}/getRoomByName`,
-  thunk: sendRoom,
-});
+export const getRoomByName = createAsyncThunk(
+  `${ROOMS_SLICE_NAME}/getRoomByName`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await sendRoom(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
-export const addRoom = decorateAsyncThunk({
-  type: `${ROOMS_SLICE_NAME}/addRoom`,
-  thunk: createRoom,
-});
+export const addRoom = createAsyncThunk(
+  `${ROOMS_SLICE_NAME}/addRoom`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await createRoom(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
-export const delRooms = decorateAsyncThunk({
-  type: `${ROOMS_SLICE_NAME}/delRooms`,
-  thunk: deleteRooms,
-});
-
+export const delRooms = createAsyncThunk(
+  `${ROOMS_SLICE_NAME}/delRooms`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await deleteRooms(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const roomsSlice = createSlice({
   name: ROOMS_SLICE_NAME,
@@ -31,7 +66,7 @@ const roomsSlice = createSlice({
     rooms: [],
     error: null,
     isFetching: false,
-    room: null
+    room: null,
   },
   reducers: {},
   extraReducers: (builder) => {

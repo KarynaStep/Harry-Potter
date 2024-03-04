@@ -14,6 +14,7 @@ const bucketRegion = process.env.BUCKET_REGION;
 const accessKey = process.env.ACCESS_KEY;
 const secretAccessKey = process.env.SECRET_ACCESS_KEY;
 
+
 const s3 = new S3Client({
   credentials: {
     accessKeyId: accessKey,
@@ -22,32 +23,6 @@ const s3 = new S3Client({
   region: bucketRegion,
 });
 
-
-
-module.exports.createUser = async (req, res, next) => {
-  try {
-    const { body } = req;
-    const values = _.pick(body, attrs);
-
-    const card = await Card.findByPk(values.idCard);
-    if (!card) {
-      return next(createError(404, 'Card not found'));
-    }
-
-    const [room, created] = await Room.findOrCreate({
-      where: { name: values.nameRoom },
-      defaults: {
-        standardDeck: true,
-        proDeck: false,
-      },
-    });
-
-    const user = await User.create(values);
-    res.status(201).send({ data: user });
-  } catch (error) {
-    next(error);
-  }
-};
 
 module.exports.getUser = async (req, res, next) => {
   try {

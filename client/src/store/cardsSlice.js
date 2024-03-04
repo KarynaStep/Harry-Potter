@@ -1,24 +1,50 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { addOneCard, getCardsNotPro, getCardsPro } from '../api';
-import { pendingReducer, rejectReducer, decorateAsyncThunk } from './helpers';
+import { pendingReducer, rejectReducer } from './helpers';
 
 const CARDS_SLICE_NAME = 'cards';
 
-export const getCards = decorateAsyncThunk({
-  type: `${CARDS_SLICE_NAME}/getCards`,
-  thunk: getCardsNotPro,
-});
+export const getCards = createAsyncThunk(
+  `${CARDS_SLICE_NAME}/getCards`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await getCardsNotPro(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
-export const addCard = decorateAsyncThunk({
-  type: `${CARDS_SLICE_NAME}/addCard`,
-  thunk: addOneCard,
-});
+export const addCard = createAsyncThunk(
+  `${CARDS_SLICE_NAME}/addCard`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await addOneCard(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
-export const getCardsAllPro = decorateAsyncThunk({
-  type: `${CARDS_SLICE_NAME}/getCardsPro`,
-  thunk: getCardsPro,
-});
-
+export const getCardsAllPro = createAsyncThunk(
+  `${CARDS_SLICE_NAME}/getCardsPro`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await getCardsPro(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const usersSlice = createSlice({
   name: CARDS_SLICE_NAME,
@@ -27,7 +53,7 @@ const usersSlice = createSlice({
     cardsPro: [],
     error: null,
     isFetching: false,
-    card: null
+    card: null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -45,13 +71,13 @@ const usersSlice = createSlice({
       state.cardsPro = action.payload;
     });
     builder.addCase(getCardsAllPro.rejected, rejectReducer);
-     builder.addCase(addCard.pending, pendingReducer);
-     builder.addCase(addCard.fulfilled, (state, action) => {
-       state.isFetching = false;
-       state.error = null;
-       state.card = action.payload;
-     });
-     builder.addCase(addCard.rejected, rejectReducer);
+    builder.addCase(addCard.pending, pendingReducer);
+    builder.addCase(addCard.fulfilled, (state, action) => {
+      state.isFetching = false;
+      state.error = null;
+      state.card = action.payload;
+    });
+    builder.addCase(addCard.rejected, rejectReducer);
   },
 });
 

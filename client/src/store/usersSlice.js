@@ -1,36 +1,55 @@
-import { createSlice } from '@reduxjs/toolkit';
-import {createUser, deletelUsers, getAllUsers, sendUsersInRoom, updateUser } from '../api';
-import { pendingReducer, rejectReducer, decorateAsyncThunk } from './helpers';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import {
+  deletelUsers,
+  getAllUsers,
+  sendUsersInRoom,
+} from '../api';
+import { pendingReducer, rejectReducer } from './helpers';
 
 const USERS_SLICE_NAME = 'users';
 
-export const sendUsersByRoom = decorateAsyncThunk({
-  type: `${USERS_SLICE_NAME}/sendUsersByRoom`,
-  thunk: sendUsersInRoom
-});
+export const sendUsersByRoom = createAsyncThunk(
+  `${USERS_SLICE_NAME}/sendUsersByRoom`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await sendUsersInRoom(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 
-export const addUser = decorateAsyncThunk({
-  type: `${USERS_SLICE_NAME}/addUser`,
-  thunk: createUser,
-});
+export const getUsers = createAsyncThunk(
+  `${USERS_SLICE_NAME}/getUsers`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await getAllUsers(params);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
-export const updateOneUser = decorateAsyncThunk({
-  type: `${USERS_SLICE_NAME}/updateOneUser`,
-  thunk: updateUser,
-});
-
-
-export const getUsers = decorateAsyncThunk({
-  type: `${USERS_SLICE_NAME}/getUsers`,
-  thunk: getAllUsers,
-});
-
-export const delUsers = decorateAsyncThunk({
-  type: `${USERS_SLICE_NAME}/delUsers`,
-  thunk: deletelUsers,
-});
-
+export const delUsers = createAsyncThunk(
+  `${USERS_SLICE_NAME}/delUsers`,
+  async (params, thunkAPI) => {
+    try {
+      const {
+        data: { data },
+      } = await deletelUsers();
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 
 const usersSlice = createSlice({
   name: USERS_SLICE_NAME,
@@ -41,6 +60,17 @@ const usersSlice = createSlice({
     userAuth: null,
   },
   reducers: {
+    addUser: (state, action) => {
+      state.error = null;
+      state.userAuth = action.payload;
+    },
+    updateOneUser: (state, action) => {
+      state.error = null;
+      state.userAuth = action.payload;
+    },
+    errUser: (state, action) => {
+      state.error = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(sendUsersByRoom.pending, pendingReducer);
@@ -50,13 +80,6 @@ const usersSlice = createSlice({
       state.error = null;
     });
     builder.addCase(sendUsersByRoom.rejected, rejectReducer);
-    builder.addCase(addUser.pending, pendingReducer);
-    builder.addCase(addUser.fulfilled, (state, action) => {
-      state.isFetching = false;
-      state.error = null;
-      state.userAuth = action.payload;
-    });
-    builder.addCase(addUser.rejected, rejectReducer);
     builder.addCase(getUsers.pending, pendingReducer);
     builder.addCase(getUsers.fulfilled, (state, action) => {
       state.users = action.payload;
@@ -64,13 +87,6 @@ const usersSlice = createSlice({
       state.error = null;
     });
     builder.addCase(getUsers.rejected, rejectReducer);
-    builder.addCase(updateOneUser.pending, pendingReducer);
-    builder.addCase(updateOneUser.fulfilled, (state, action) => {
-      state.isFetching = false;
-      state.error = null;
-      state.userAuth = action.payload;
-    });
-    builder.addCase(updateOneUser.rejected, rejectReducer);
     builder.addCase(delUsers.pending, pendingReducer);
     builder.addCase(delUsers.fulfilled, (state, action) => {
       state.isFetching = false;
@@ -80,5 +96,6 @@ const usersSlice = createSlice({
     builder.addCase(delUsers.rejected, rejectReducer);
   },
 });
-
 export default usersSlice.reducer;
+
+export const { addUser, errUser, updateOneUser } = usersSlice.actions;
