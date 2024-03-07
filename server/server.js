@@ -1,7 +1,7 @@
 const http = require('http');
 const app = require('./app.js');
 const _ = require('lodash');
-const { PORT, WEBSOCKET_EVENTS, BASE_URL } = require('./constants.js');
+const { PORT, WEBSOCKET_EVENTS } = require('./constants.js');
 const { Server } = require('socket.io');
 const { Room, User, Card } = require('./models');
 
@@ -11,7 +11,9 @@ const server = http.createServer(app);
 const io = new Server(server, {
   transport: ['websocket'],
   cors: {
-    origin: `http://${process.env.API_HOST_WEBSOCKET || BASE_URL}`,
+    origin: `http://${
+      process.env.API_HOST_WEBSOCKET || WEBSOCKET_EVENTS.BASE_URL
+    }`,
   },
 });
 

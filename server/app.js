@@ -4,6 +4,7 @@ const router = require('./routes');
 const handleErrors = require('./handleErrors');
 const schedule = require('node-schedule');
 const request = require('request');
+const { BASE_URL } = require('./constants');
 
 
 
@@ -18,11 +19,15 @@ app.use(handleErrors);
 
 module.exports = app;
 
+
 const job = schedule.scheduleJob('45 3 * *', function () {
-  request(
-    { uri: 'http://localhost:3000/api/rooms', method: 'DELETE' },
-  );
-  request(
-    { uri: 'http://localhost:3000/api/users', method: 'DELETE' },
-  );
+  console.log('del');
+  request({
+    uri: `http://${process.env.API_HOST || BASE_URL}/api/rooms`,
+    method: 'DELETE',
+  });
+  request({
+    uri: `http://${process.env.API_HOST || BASE_URL}/api/rooms`,
+    method: 'DELETE',
+  });
 });
