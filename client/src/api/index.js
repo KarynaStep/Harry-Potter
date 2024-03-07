@@ -29,7 +29,7 @@ export const addOneCard = (values) =>
   });
   
 
-const socket = io(`http://${BASE_URL}`);
+const socket = io(`http://${process.env.REACT_APP_API_HOST || BASE_URL}`);
 
   export const createUser = (user) =>
     socket.emit(WEBSOCKET_EVENTS.NEW_USER, user);

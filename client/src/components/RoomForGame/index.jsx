@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { sendUsersByRoom,  } from '../../store/usersSlice';
-import styles from './RoomForGame.module.scss';
-import { getRandomInt } from '../../utils/randomNumbers';
-import CONSTANTS from '../../constants';
+
+import { sendUsersByRoom } from '../../store/usersSlice';
 import { getRoomByName } from '../../store/roomsSlice';
 import { updateUser } from '../../api';
+import { getRandomInt } from '../../utils/randomNumbers';
+import { fillArray } from '../../utils/fillArray';
+
+import CONSTANTS from '../../constants';
+import styles from './RoomForGame.module.scss';
 
 const RoomForGame = () => {
   const { users, error, isFetching, userAuth } = useSelector(
@@ -15,24 +18,12 @@ const RoomForGame = () => {
   const { errorRoom, isFetchingRoom, room } = useSelector(
     (state) => state.rooms
   );
-  
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   let deck = CONSTANTS.ARRAY_CARDS.CARDS;
   let maxValueForRandom = CONSTANTS.ARRAY_CARDS.CARDS.length;
-
-  if (
-    !CONSTANTS.ARRAY_CARDS.CARDS.length ||
-    !CONSTANTS.ARRAY_CARDS.CARDS_PRO.length
-  ) {
-    for (let index = 1; index <= CONSTANTS.MAX_VALUE_CARDS; index++) {
-      CONSTANTS.ARRAY_CARDS.CARDS.push(index);
-    }
-    for (let index = 1; index <= CONSTANTS.MAX_VALUE_CARDS_PRO; index++) {
-      CONSTANTS.ARRAY_CARDS.CARDS_PRO.push(index);
-    }
-  }
 
   const nameRoomInLS = localStorage
     .getItem('nameRoom')
@@ -46,7 +37,14 @@ const RoomForGame = () => {
     dispatch(getRoomByName({ name: nameRoomInLS }));
   }, [dispatch, userAuth]);
 
-  const changeIdUser = (users) => {
+  if (
+    !CONSTANTS.ARRAY_CARDS.CARDS.length ||
+    !CONSTANTS.ARRAY_CARDS.CARDS_PRO.length
+  ) {
+    fillArray();
+  }
+
+  const changeIdUserCards = (users) => {
     const idCardInRoom = [];
     if (room.proDeck) {
       maxValueForRandom = CONSTANTS.ARRAY_CARDS.CARDS_PRO.length;
@@ -77,12 +75,12 @@ const RoomForGame = () => {
 
   const handelClickExit = () => navigate('/');
 
-  const handelClick = (id) => {
+  const handelClickСharacterСhange = (id) => {
     if (room.proDeck) {
       maxValueForRandom = CONSTANTS.ARRAY_CARDS.CARDS_PRO.length;
       deck = CONSTANTS.ARRAY_CARDS.CARDS_PRO;
     }
-    
+
     let randomNumbers = getRandomInt(0, maxValueForRandom);
     let idCard = deck[randomNumbers];
 
@@ -107,7 +105,9 @@ const RoomForGame = () => {
         )}
         <h3>{user.Card['name']}</h3>
         <p>{user.Card['description']}</p>
-        <button onClick={() => handelClick(user.id)}>Змінити персонажа</button>
+        <button onClick={() => handelClickСharacterСhange(user.id)}>
+          Змінити персонажа
+        </button>
       </div>
     );
   };
@@ -119,7 +119,11 @@ const RoomForGame = () => {
       {isFetching && <p>Loading...</p>}
       {errorRoom && <p>{error}</p>}
       {isFetchingRoom && <p>Loading...</p>}
-      {!errorRoom && !isFetchingRoom && room && users && changeIdUser(users)}
+      {!errorRoom &&
+        !isFetchingRoom &&
+        room &&
+        users &&
+        changeIdUserCards(users)}
       {!error && !isFetching && users && (
         <article className={styles.container_for_cards}>
           {users.map(mapUsers)}

@@ -6,4 +6,5 @@ module.exports = {
     UPDATE_USER: 'UPDATE_USER',
     ERR_USER: 'ERR_USER',
   },
+  BASE_URL: 'localhost:5000',
 };

@@ -8,6 +8,7 @@ import { createUser } from '../../api';
 import { addRoom } from '../../store/roomsSlice';
 import styles from './RegistrationWindow.module.scss';
 import CONSTANTS from '../../constants';
+import { fillArray } from '../../utils/fillArray';
 
 const initialValues = {
   nameRoom: '',
@@ -27,12 +28,7 @@ const RegistrationWindow = (props) => {
     !CONSTANTS.ARRAY_CARDS.CARDS.length ||
     !CONSTANTS.ARRAY_CARDS.CARDS_PRO.length
   ) {
-    for (let index = 1; index <= CONSTANTS.MAX_VALUE_CARDS; index++) {
-      CONSTANTS.ARRAY_CARDS.CARDS.push(index);
-    }
-    for (let index = 1; index <= CONSTANTS.MAX_VALUE_CARDS_PRO; index++) {
-      CONSTANTS.ARRAY_CARDS.CARDS_PRO.push(index);
-    }
+    fillArray()
   }
 
   const submit = (values, formikBag) => {
@@ -64,7 +60,7 @@ const RegistrationWindow = (props) => {
 
     formikBag.resetForm();
 
-    navigate('/room');
+     setTimeout(navigate('/room'), 0);
   };
 
   const handelClick = () => setWindow(!window);

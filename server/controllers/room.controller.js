@@ -43,20 +43,6 @@ module.exports.getAllRooms = async (req, res, next) => {
   }
 };
 
-module.exports.updateRoom = async (req, res, next) => {
-  try {
-    const { body, roomInstance } = req;
-    const values = _.pick(body, attrs);
-    const updatedRoom = await roomInstance.update(values);
-    if (!updatedRoom) {
-      return next(createError(404, 'Room not updated'));
-    }
-    return res.status(200).send({ data: updatedRoom });
-  } catch (error) {
-    next(error);
-  }
-};
-
 module.exports.deleteRoom = async (req, res, next) => {
   try {
     const date = new Date();
@@ -80,7 +66,7 @@ module.exports.getRoomForName = async (req, res, next) => {
     const values = _.pick(body, attrs);
     
     const room = await Room.findOne({ where: { name: values.name} });
-    if (!room) {
+    if (room === null) {
       return next(createError(404, 'Room not find'));
     }
     res.status(200).send({ data: room });

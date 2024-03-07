@@ -15,7 +15,6 @@ roomRouter
   .route('/:idRoom')
   .all(checkRoom)
   .get(RoomController.getRoom)
-  .patch(RoomController.updateRoom);
   
 
 module.exports = roomRouter;
