@@ -9,6 +9,9 @@ services:
       - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.email=stepanova.carina98@gmail.com"
@@ -24,7 +27,7 @@ services:
   front-react:
     restart: always
     container_name: frontend
-    image: registry.digitalocean.com/harry-potter/frontend:v1.1
+    image: registry.digitalocean.com/harry-potter/frontend:stable
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.front-react.rule=Host(`harry-potter.pp.ua`)"
@@ -41,7 +44,7 @@ services:
   server-dev:
     restart: always
     container_name: backend
-    image: registry.digitalocean.com/harry-potter/backend:v1.1
+    image: registry.digitalocean.com/harry-potter/backend:stable
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.server-dev.rule=Host(`harry-potter.pp.ua`) && PathPrefix(`/api`)"

@@ -9,10 +9,10 @@ services:
         - NODE_ENV=development
     ports:
       - 5000:5000
-  
+
   server-dev:
     platform: linux/amd64
-    build: 
+    build:
       context: ./server
       args:
         - NODE_ENV=development
